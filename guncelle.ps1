@@ -1,6 +1,6 @@
 ﻿# Uygulamada değişiklik yapıldıktan sonra yeni sürümü GitHub'a gönderir.
 # Çalıştırma:  powershell -ExecutionPolicy Bypass -File guncelle.ps1
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = 'Continue'   # git uyarıları stderr'e yazar; 5.1'de hata sayılmasın
 $env:Path = "C:\Program Files\Git\cmd;C:\Program Files\GitHub CLI;" + $env:Path
 $kok = Split-Path $PSScriptRoot -Parent
 & "$kok\kaynak\derle.ps1"                                   # kaynaktan github-yukle klasörünü yeniden üret
