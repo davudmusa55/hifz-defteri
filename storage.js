@@ -21,7 +21,7 @@
   const TERCIH_ON = "hifz-defteri-v1-";
   const SES_CACHE = "ses-collak";
   const YEDEK_FORMAT = "hifz-defteri-yedek", YEDEK_SURUM = 1;   // dışa aktarma dosyasının biçim sürümü
-  const TERCIH_ADLARI = ["tema", "hat2", "gorunum", "zemin", "boyut"]; // yedeğe giren tercihler
+  const TERCIH_ADLARI = ["tema", "hat2", "gorunum", "zemin", "boyut", "dinle"]; // yedeğe giren tercihler
 
   /* ---------- Tercihler (küçük, eşzamanlı) ---------- */
   const tercih = {

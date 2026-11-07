@@ -419,6 +419,51 @@ input[type=range]{accent-color:var(--ana)}
 .km-not{display:flex;flex-direction:column;gap:6px;margin-top:6px;padding:10px 6px 2px;border-top:1px solid var(--cizgi)}
 .km-not .km-link{flex:1;text-align:center}
 .husrev{display:flex;flex-direction:column;gap:10px}
+/* Sayfa kenar boşluğu yok: üst şerit ve alt çubuk kenardan kenara */
+html,body{margin:0;padding:0}
+/* Alt bölüm: oynatıcı kartı ve araç çubuğu üst üste, birbirine binmez */
+.okuyucu-dip{position:fixed;left:0;right:0;bottom:0;z-index:21;display:flex;flex-direction:column;pointer-events:none}
+.okuyucu-dip>*{pointer-events:auto}
+.okuyucu-dip .okuyucu-alt{position:static}
+.okuyucu-dip .oa.sayac-b b{margin-top:0;width:44px;height:44px;box-shadow:none;font-size:13px}
+.okuyucu-dip .calar{position:static;margin:0 10px 10px;max-width:none;border-radius:24px;padding:12px 12px 12px;box-shadow:0 10px 32px rgba(0,0,0,.28);background:var(--bas);color:var(--bas-yazi)}
+@media (min-width:700px){.okuyucu-dip .calar{width:min(640px,calc(100% - 20px));margin:0 auto 10px}}
+.okuyucu-dip .calar-ust{grid-template-columns:44px 56px 44px minmax(0,1fr) 38px;gap:8px}
+.okuyucu-dip .calar-b{width:44px;height:44px;background:rgba(255,255,255,.12)}
+.okuyucu-dip .calar-b svg{width:20px;height:20px}
+.okuyucu-dip .calar-b.ana{width:56px;height:56px;background:var(--bas-yazi);color:var(--bas)}
+.okuyucu-dip .calar-b.ana svg{width:24px;height:24px}
+.okuyucu-dip .calar-b.kck{width:38px;height:38px;background:rgba(255,255,255,.08)}
+.okuyucu-dip .calar-b.kck svg{width:18px;height:18px}
+.okuyucu-dip .calar-orta{padding-left:6px}
+.okuyucu-dip .calar-alt{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.okuyucu-dip .calar-cip{display:inline-flex;align-items:center;gap:8px;border:0;border-radius:99px;background:rgba(255,255,255,.12);color:inherit;padding:7px 14px 7px 11px;font-weight:700;font-size:14px;min-height:38px}
+.okuyucu-dip .calar-cip svg{width:18px;height:18px;flex:none}
+.okuyucu-ana.calar-acik{padding-bottom:calc(230px + env(safe-area-inset-bottom,0px))}
+/* Alttan açılan pencere (e-Diyanet tarzı) */
+.sheet-arka{position:fixed;inset:0;background:rgba(0,0,0,.45);border:0;z-index:80;padding:0;cursor:default}
+.sheet{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:81;max-width:520px;margin:0 auto;background:var(--kart);color:var(--murekkep);border-radius:30px;padding:22px 20px 26px;box-shadow:0 24px 70px rgba(0,0,0,.32);display:flex;flex-direction:column;gap:18px;animation:shgir .22s ease-out;max-height:86vh;overflow:auto}
+@keyframes shgir{from{transform:translateY(28px);opacity:0}}
+.sh-bas{display:grid;grid-template-columns:54px minmax(0,1fr) 42px;gap:14px;align-items:center}
+.sh-ik{width:54px;height:54px;border-radius:18px;background:var(--ana-a);display:inline-flex;align-items:center;justify-content:center}
+.sh-ik svg{width:26px;height:26px}
+.sh-bas b{display:block;font-size:21px;line-height:1.2}
+.sh-kapat{width:42px;height:42px;border-radius:14px;border:0;background:var(--ana-a);color:inherit;display:inline-flex;align-items:center;justify-content:center;padding:0;align-self:start}
+.sh-kapat svg{width:20px;height:20px}
+.gosterge{border:1px solid var(--cizgi);border-radius:26px;padding:18px 18px 12px;display:flex;flex-direction:column;align-items:center;width:100%;max-width:300px;margin:0 auto}
+.gosterge svg{width:100%;max-width:210px;overflow:visible}
+.g-iz{fill:none;stroke:var(--bos);stroke-width:13;stroke-linecap:round}
+.g-dolu{fill:none;stroke:var(--soluk);stroke-width:13;stroke-linecap:round}
+.g-tik{stroke:var(--cizgi);stroke-width:2.5;stroke-linecap:round}
+.g-igne{stroke:var(--murekkep);stroke-width:4.5;stroke-linecap:round}
+.g-merkez{fill:var(--kart);stroke:var(--murekkep);stroke-width:4.5}
+.g-deger{font-size:46px;font-weight:800;letter-spacing:-.02em;line-height:1.05;margin-top:2px;font-variant-numeric:tabular-nums}
+.sheet input[type=range]{width:100%;accent-color:var(--ana);height:32px}
+.hiz-cip,.tek-cip{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.cip{min-width:78px;height:54px;border-radius:18px;border:1px solid var(--cizgi);background:var(--kart);font-weight:600;font-size:17px;padding:0 16px;color:inherit}
+.cip[aria-pressed="true"]{background:var(--ana);border-color:var(--ana);color:var(--ana-yazi);box-shadow:0 8px 18px rgba(0,0,0,.2);font-weight:800}
+.sh-grup{display:flex;flex-direction:column;gap:10px}
+.sh-grup>b{font-size:15px;color:var(--soluk)}
 /* Secde ayeti: kelimelerin üstünde kırmızı çizgi ve hafif zemin, sonunda ۩ */
 .ayet.secde .met{background:linear-gradient(var(--lafz),var(--lafz)) 0 .12em/100% 2px no-repeat,linear-gradient(rgba(179,38,30,.07),rgba(179,38,30,.07));-webkit-box-decoration-break:clone;box-decoration-break:clone;border-radius:3px;padding:0 .08em}
 .koyu-sayfa .ayet.secde .met{background:linear-gradient(var(--lafz),var(--lafz)) 0 .12em/100% 2px no-repeat,linear-gradient(rgba(255,138,122,.1),rgba(255,138,122,.1))}
@@ -738,7 +783,7 @@ const hamSatir=u=>u.a===1&&u.b===satirOf(u.m)?"Tüm sayfa":(u.a===u.b?u.a:u.a+"�
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 function tost(t){const e=$("#tost");e.textContent=t;e.hidden=false;clearTimeout(e._t);e._t=setTimeout(()=>e.hidden=true,3200)}
 const LOGO=`<svg viewBox="0 0 40 40" aria-hidden="true"><rect x="9" y="9" width="22" height="22" rx="2" fill="#F2B233"/><rect x="9" y="9" width="22" height="22" rx="2" fill="#F2B233" transform="rotate(45 20 20)"/><path d="M12.5 15c3-1 5.5-.8 7.5.6v12c-2-1.3-4.5-1.6-7.5-.6zM27.500 15c-3-1-5.500-.8-7.500.6v12c2-1.300 4.500-1.600 7.500-.6z" fill="#fff" stroke="#0F3A40" stroke-width="1.2" stroke-linejoin="round"/><path d="M15 18.600c1.200-.3 2.200-.2 3 .2M15 21.500c1.200-.3 2.200-.2 3 .2M25 18.600c-1.200-.3-2.200-.2-3 .2M25 21.500c-1.200-.3-2.200-.2-3 .2" stroke="#D9472F" stroke-width="1.100" fill="none" stroke-linecap="round"/></svg>`;
-const IK={buyut:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',kucult:'<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>',menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',kapat:'<path d="M6 6l12 12M18 6L6 18"/>',dinle:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="5" height="7" rx="1.500"/><rect x="16" y="14" width="5" height="7" rx="1.500"/>',hafiz:'<path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/>',meal:'<path d="M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h5z"/>',benzer:'<path d="M4 7h11M4 12h8M4 17h11"/><path d="M17 9l3 3-3 3"/>',ozet:'<path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM9.500 8h5M9.500 12h5M9.500 16h3"/>',kuran:'<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM5 18a2 2 0 0 1 2-2h12"/>',daha:'<circle cx="5" cy="12" r="1.500"/><circle cx="12" cy="12" r="1.500"/><circle cx="19" cy="12" r="1.500"/>',bugun:'<path d="M4 6h16v14H4zM4 10h16M9 3v4M15 3v4"/>',harita:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>',plan:'<path d="M5 6h14M5 12h14M5 18h9"/>',ilerleme:'<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',sinav:'<path d="M9 9a3 3 0 1 1 4 2.800c-.8.400-1 1-1 2.200M12 18h.01"/><circle cx="12" cy="12" r="9"/>',usul:'<path d="M4 5c3-1 6-1 8 1v14c-2-2-5-2-8-1zM20 5c-3-1-6-1-8 1v14c2-2 5-2 8-1z"/>',ayar:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>'};
+const IK={cal:'<path d="M8 5.5v13l10.5-6.5z" fill="currentColor" stroke="none"/>',duraklat:'<path d="M7 5h3.500v14H7zM13.500 5H17v14h-3.500z" fill="currentColor" stroke="none"/>',onceki:'<path d="M18.500 6v12L10 12z" fill="currentColor" stroke="none"/><path d="M6 6v12"/>',sonraki:'<path d="M5.500 6v12L14 12z" fill="currentColor" stroke="none"/><path d="M18 6v12"/>',hiz:'<path d="M4.500 16a7.500 7.500 0 1 1 15 0"/><path d="M12 16l3.500-4.500"/><circle cx="12" cy="16" r="1.300" fill="currentColor"/>',buyut:'<path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/>',kucult:'<path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/>',menu:'<path d="M4 6h16M4 12h16M4 18h16"/>',kapat:'<path d="M6 6l12 12M18 6L6 18"/>',dinle:'<path d="M4 15v-3a8 8 0 0 1 16 0v3"/><rect x="3" y="14" width="5" height="7" rx="1.500"/><rect x="16" y="14" width="5" height="7" rx="1.500"/>',hafiz:'<path d="M17 2l3 3-3 3"/><path d="M4 11V9a4 4 0 0 1 4-4h12"/><path d="M7 22l-3-3 3-3"/><path d="M20 13v2a4 4 0 0 1-4 4H4"/>',meal:'<path d="M4 5h7a2 2 0 0 1 2 2v12a2 2 0 0 0-2-2H4zM20 5h-5a2 2 0 0 0-2 2v12a2 2 0 0 1 2-2h5z"/>',benzer:'<path d="M4 7h11M4 12h8M4 17h11"/><path d="M17 9l3 3-3 3"/>',ozet:'<path d="M7 3h10a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1zM9.500 8h5M9.500 12h5M9.500 16h3"/>',kuran:'<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2zM5 18a2 2 0 0 1 2-2h12"/>',daha:'<circle cx="5" cy="12" r="1.500"/><circle cx="12" cy="12" r="1.500"/><circle cx="19" cy="12" r="1.500"/>',bugun:'<path d="M4 6h16v14H4zM4 10h16M9 3v4M15 3v4"/>',harita:'<path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z"/>',plan:'<path d="M5 6h14M5 12h14M5 18h9"/>',ilerleme:'<path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/>',sinav:'<path d="M9 9a3 3 0 1 1 4 2.800c-.8.400-1 1-1 2.200M12 18h.01"/><circle cx="12" cy="12" r="9"/>',usul:'<path d="M4 5c3-1 6-1 8 1v14c-2-2-5-2-8-1zM20 5c-3-1-6-1-8 1v14c2-2 5-2 8-1z"/>',ayar:'<path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/>'};
 const ikon=k=>`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IK[k]}</svg>`;
 const SEKME=[["bugun","Bugün"],["kuran","Kuran"],["plan","Plan"],["ilerleme","İlerleme"]];
 const ALT_RT=["usul","ayar","benzer","ozet","harita","sinav","daha"];
@@ -762,7 +807,7 @@ function cerceve(ic){const r0=route(),r=r0==="yarin"?"bugun":r0;
   if(r==="kuran"&&O&&BUYUK&&KGOVDE)return`<div class="tam-mushaf${KZS.cls}" style="${KZS.st}">${KGOVDE}<button class="kucult-b" data-buyut aria-label="Küçült">${ikon("kucult")}</button></div>`;
   if(r==="kuran"&&O){const b=OB||{};
     return`<header class="okuyucu-bas"><button class="ikonbtn" data-kmenu aria-label="Okuma ayarları">${ikon("menu")}</button><div class="ob-orta">${b.ar?`<span class="ob-ar" lang="ar">${b.ar}</span>`:""}<b>${b.tr||"Kuran-ı Kerim"}</b>${b.d!=null?`<span>Sayfa ${b.d} / Cüz ${b.j}</span>`:""}</div><button class="ikonbtn" data-kapat aria-label="Okumayı kapat">${ikon("kapat")}</button></header>
-    <main class="sar okuyucu-ana${SES_OK&&CAL&&CAL.acik?" calar-acik":""}">${ic}</main>${calarHtml()}${okuyucuAlt()}${cek}`}
+    <main class="sar okuyucu-ana${SES_OK&&CAL&&CAL.acik?" calar-acik":""}">${ic}</main><div class="okuyucu-dip">${calarHtml()}${okuyucuAlt()}</div>${cek}${sheetHtml()}`}
   return`<div class="bant"><div class="sar sira ara"><div class="sira" style="gap:8px;flex-wrap:nowrap;min-width:0"><button class="ikonbtn" data-menu aria-label="Menüyü aç">${ikon("menu")}</button><button class="marka" data-git="bugun">${LOGO}Hıfz Defteri</button></div><div class="bant-sag"><nav class="sekmeler" aria-label="Bölümler">${t()}</nav>${salter()}</div></div></div>
   <main class="sar">${ic}</main><nav class="altbar" aria-label="Bölümler">${t()}<button class="sekme" data-menu>${ikon("menu")}Menü</button></nav>${cek}`}
 function ekranDaha(){return`<div class="kol"><h1>Daha fazla</h1><div class="daha">${[["benzer","Benzer ayetler"],["ozet","Haftalık özet"],["harita","Ezber haritası"],["sinav","Sınav"],["usul","Usul"],["ayar","Ayarlar"]].map(([k,a])=>`<button class="dug" data-git="${k}">${ikon(k).replace("<svg","<svg width=\"24\" height=\"24\"")}${a}</button>`).join("")}</div></div>`}
@@ -1479,16 +1524,40 @@ function calIsaretle(){document.querySelectorAll(".ayet.caliyor").forEach(e=>e.c
   if(e){e.classList.add("caliyor");const r=e.getBoundingClientRect();if(r.top<80||r.bottom>innerHeight-170)e.scrollIntoView({block:"center",behavior:"smooth"})}}
 function calOrta(){if(!CAL||!CAL.liste)return"";const[s,v]=CAL.liste[CAL.i];
   return`<b>${SURAH_TR[s-1]} ${v}. ayet</b><span>${CAL.i+1} / ${CAL.liste.length} ayet${DINLE.tekrar!==1?` · ${DINLE.tekrar?CAL.tur+". tur":"sürekli"}`:""}${CAL.el&&CAL.caliyor&&CAL.el.readyState<3?" · yükleniyor…":""}</span>`}
-function calYaz(){const o=$(".calar-orta");if(o)o.innerHTML=calOrta();const p=$("[data-calp]");if(p){p.innerHTML=CAL&&CAL.caliyor?"❚❚":"▶";p.setAttribute("aria-label",CAL&&CAL.caliyor?"Duraklat":"Çal")}
+function calYaz(){const o=$(".calar-orta");if(o)o.innerHTML=calOrta();const p=$("[data-calp]");if(p){p.innerHTML=ikon(CAL&&CAL.caliyor?"duraklat":"cal");p.setAttribute("aria-label",CAL&&CAL.caliyor?"Duraklat":"Çal")}
   const d=$("[data-dinle]");if(d)d.setAttribute("aria-pressed",!!(CAL&&CAL.caliyor))}
 function medyaOturum(){if(!("mediaSession" in navigator)||!CAL)return;const[s,v]=CAL.liste[CAL.i];
   try{navigator.mediaSession.metadata=new MediaMetadata({title:`${SURAH_TR[s-1]} ${v}. ayet`,artist:"Fatih Çollak",album:"Hıfz Defteri · s."+dOf(O.m)});
     navigator.mediaSession.setActionHandler("play",()=>calDurdurDevam());navigator.mediaSession.setActionHandler("pause",()=>calDurdurDevam());
     navigator.mediaSession.setActionHandler("nexttrack",()=>calAtla(1));navigator.mediaSession.setActionHandler("previoustrack",()=>calAtla(-1))}catch(e){}}
+/* Oynatıcı: alttaki araç çubuğuyla aynı alt bölümde, yuvarlak köşeli kart. Hız ve tekrar alttan açılan pencerelerde. */
+let SHEET=null;
+const HIZLAR=[.5,.75,1,1.25,1.5,1.75,2,2.5,3];
+const hizYaz=h=>String(+(+h).toFixed(2)).replace(".",",");
+const hizAd=h=>h<.9?"Yavaş":h<1.1?"Normal":h<1.6?"Hızlı":"Çok hızlı";
+function dinleKaydet(){Depo.tercih.yaz("dinle",{hiz:DINLE.hiz,tekrar:DINLE.tekrar,ayet:DINLE.ayet})}
+function hizAyarla(h){DINLE.hiz=Math.round(Math.max(.5,Math.min(3,h))*100)/100;if(CAL&&CAL.el)CAL.el.playbackRate=DINLE.hiz;dinleKaydet()}
+function gosterge(h){
+  const cx=100,cy=100,r=76,f=(h-.5)/2.5,a=Math.PI*(1-f),nok=(t,rr)=>[cx+rr*Math.cos(Math.PI*(1-t)),cy-rr*Math.sin(Math.PI*(1-t))];
+  const[x,y]=nok(f,r),[nx,ny]=nok(f,50);
+  const tik=[0,.2,.4,.6,.8,1].map(t=>{const[a1,b1]=nok(t,90),[a2,b2]=nok(t,98);return`<line class="g-tik" x1="${a1.toFixed(1)}" y1="${b1.toFixed(1)}" x2="${a2.toFixed(1)}" y2="${b2.toFixed(1)}"/>`}).join("");
+  return`<svg viewBox="0 0 200 112" aria-hidden="true"><path class="g-iz" d="M24 100 A76 76 0 0 1 176 100"/>${f>.005?`<path class="g-dolu" d="M24 100 A76 76 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)}"/>`:""}${tik}<line class="g-igne" x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}"/><circle class="g-merkez" cx="${cx}" cy="${cy}" r="7"/></svg><b class="g-deger">${hizYaz(h)}×</b>`}
+function sheetHtml(){if(!SHEET)return"";
+  const bas=(ik,b,a)=>`<div class="sh-bas"><span class="sh-ik">${ikon(ik)}</span><div><b>${b}</b><span class="soluk" id="shalt">${a}</span></div><button class="sh-kapat" data-sheetkapat aria-label="Kapat">${ikon("kapat")}</button></div>`;
+  const arka=`<button class="sheet-arka" data-sheetkapat aria-label="Kapat"></button>`;
+  if(SHEET==="hiz")return arka+`<div class="sheet" role="dialog" aria-label="Oynatma hızı">${bas("hiz","Oynatma hızı",hizAd(DINLE.hiz))}
+    <div class="gosterge" id="gosterge">${gosterge(DINLE.hiz)}</div>
+    <div class="kol" style="gap:4px"><div class="sira ara soluk kucuk"><span>${ikon("cal").replace("<svg",'<svg width="14" height="14"')} 0,5×</span><span>3×</span></div>
+    <input type="range" id="hizkaydir" min="0.5" max="3" step="0.05" value="${DINLE.hiz}" aria-label="Oynatma hızı"></div>
+    <div class="hiz-cip">${HIZLAR.map(h=>`<button class="cip" data-calhiz="${h}" aria-pressed="${Math.abs(DINLE.hiz-h)<.01}">${h===1?"Normal":hizYaz(h)+"×"}</button>`).join("")}</div></div>`;
+  const cip=(at,v,cur,t)=>`<button class="cip" data-${at}="${v}" aria-pressed="${cur===v}">${t}</button>`;
+  return arka+`<div class="sheet" role="dialog" aria-label="Tekrar ayarı">${bas("hafiz","Tekrar","Ezber için dinleme tekrarı")}
+    <div class="sh-grup"><b>Sayfayı kaç kez dinleyeceksin?</b><div class="tek-cip">${[1,2,3,5,10,0].map(v=>cip("caltekrar",v,DINLE.tekrar,v?v+" kez":"Sürekli")).join("")}</div></div>
+    <div class="sh-grup"><b>Her ayet kaç kez okunsun?</b><div class="tek-cip">${[1,2,3,5,7,10].map(v=>cip("calayet",v,DINLE.ayet,v+"×")).join("")}</div>
+    <span class="not">Örneğin 3× seçersen her ayet üç kez okunur, sonra sıradaki ayete geçilir.</span></div></div>`}
 function calarHtml(){if(!SES_OK||!CAL||!CAL.acik)return"";
-  const sec=(ad,at,l,cur)=>`<div class="calar-sec"><span>${ad}</span>${l.map(([v,t])=>`<button class="hap" data-${at}="${v}" aria-pressed="${cur===v}">${t}</button>`).join("")}</div>`;
-  return`<div class="calar" role="region" aria-label="Dinleme"><div class="calar-ust"><button class="calar-b" data-calatla="-1" aria-label="Önceki ayet">⏮</button><button class="calar-b ana" data-calp aria-label="${CAL.caliyor?"Duraklat":"Çal"}">${CAL.caliyor?"❚❚":"▶"}</button><button class="calar-b" data-calatla="1" aria-label="Sonraki ayet">⏭</button><div class="calar-orta">${calOrta()}</div><button class="calar-b" data-calkapat aria-label="Dinlemeyi kapat">✕</button></div>
-  <details class="calar-ayar"><summary>Hız ve tekrar</summary>${sec("Hız","calhiz",[[.75,"0,75×"],[1,"1×"],[1.25,"1,25×"]],DINLE.hiz)}${sec("Sayfa tekrarı","caltekrar",[[1,"1"],[3,"3"],[5,"5"],[0,"∞"]],DINLE.tekrar)}${sec("Her ayet","calayet",[[1,"1"],[2,"2"],[3,"3"],[5,"5"]],DINLE.ayet)}</details></div>`}
+  return`<div class="calar" role="region" aria-label="Dinleme"><div class="calar-ust"><button class="calar-b" data-calatla="-1" aria-label="Önceki ayet">${ikon("onceki")}</button><button class="calar-b ana" data-calp aria-label="${CAL.caliyor?"Duraklat":"Çal"}">${ikon(CAL.caliyor?"duraklat":"cal")}</button><button class="calar-b" data-calatla="1" aria-label="Sonraki ayet">${ikon("sonraki")}</button><div class="calar-orta">${calOrta()}</div><button class="calar-b kck" data-calkapat aria-label="Dinlemeyi kapat">${ikon("kapat")}</button></div>
+  <div class="calar-alt"><button class="calar-cip" data-sheet="hiz">${ikon("hiz")}<span>${DINLE.hiz===1?"Normal hız":hizYaz(DINLE.hiz)+"×"}</span></button><button class="calar-cip" data-sheet="tekrar">${ikon("hafiz")}<span>Sayfa ${DINLE.tekrar?DINLE.tekrar+" kez":"sürekli"} · ayet ${DINLE.ayet}×</span></button></div></div>`}
 /* Sesleri cihaza indirme: kayıtlar archive.org'dan bu cihazın önbelleğine (ses-collak) iner, yalnızca burada durur.
    Servis çalışanı aynı adrese gelen istekleri önbellekten, ileri sarmayı destekleyerek karşılar; böylece dinleme internetsiz çalışır. */
 const SES_CACHE="ses-collak",sesAnahtar=s=>"ses/"+String(s).padStart(3,"0")+".mp3";
@@ -1693,9 +1762,11 @@ document.addEventListener("click",e=>{
   if(d.sessil){if(d.sessil==="sor")sesSilOnay=true;else if(d.sessil==="evet"){sesSil();return}else sesSilOnay=false;render();return}
   if(d.calatla){calAtla(+d.calatla);return}
   if(d.calkapat!=null){calKapat();return}
-  if(d.calhiz){DINLE.hiz=+d.calhiz;if(CAL)CAL.el.playbackRate=DINLE.hiz;render();return}
-  if(d.caltekrar){DINLE.tekrar=+d.caltekrar;render();return}
-  if(d.calayet){DINLE.ayet=+d.calayet;if(CAL)CAL.ayetKalan=Math.min(CAL.ayetKalan,DINLE.ayet);render();return}
+  if(d.calhiz){hizAyarla(+d.calhiz);render();return}
+  if(d.caltekrar){DINLE.tekrar=+d.caltekrar;dinleKaydet();render();return}
+  if(d.calayet){DINLE.ayet=+d.calayet;if(CAL)CAL.ayetKalan=Math.min(CAL.ayetKalan,DINLE.ayet);dinleKaydet();render();return}
+  if(d.sheet){SHEET=d.sheet;render();return}
+  if(d.sheetkapat!=null){SHEET=null;render();return}
   if(d.menu!=null){MENU=true;KMENU=false;render();return}
   if(d.kmenu!=null){KMENU=true;MENU=false;render();return}
   if(d.menukapat!=null){MENU=false;KMENU=false;render();return}
@@ -1793,6 +1864,9 @@ document.addEventListener("input",e=>{const t=e.target,d=t.dataset;
   if(t.id==="plandk"){$("#planDkYazi").textContent=t.value;return}
   if(t.id==="fmin"){F.min=t.value;return}
   if(t.id==="fnot"){F.note=t.value;return}
+  if(t.id==="hizkaydir"){hizAyarla(+t.value);const g=$("#gosterge");if(g)g.innerHTML=gosterge(DINLE.hiz);const a=$("#shalt");if(a)a.textContent=hizAd(DINLE.hiz);
+    document.querySelectorAll("[data-calhiz]").forEach(b=>b.setAttribute("aria-pressed",Math.abs(DINLE.hiz-+b.dataset.calhiz)<.01));
+    const c=$('[data-sheet="hiz"] span');if(c)c.textContent=DINLE.hiz===1?"Normal hız":hizYaz(DINLE.hiz)+"×";return}
   if(t.id==="kboyut"){ORAN=+t.value/100;document.documentElement.style.setProperty("--oran",ORAN);$("#kboyutd").textContent="%"+t.value;Depo.tercih.yaz("boyut",ORAN);return}
   if(t.id==="bznot"){BZ.not=t.value;return}
   if(d.sayfa){if(t.value!=="")W.parts[d.c][d.sayfa]=idOfD(+t.value)}});
@@ -1817,20 +1891,21 @@ function ipucu(e){const t=e.target.closest&&e.target.closest("[data-tip]"),ip=$(
   const r=t.getBoundingClientRect(),w=ip.offsetWidth;
   ip.style.left=Math.max(8,Math.min(innerWidth-w-8,r.left+r.width/2-w/2))+"px";ip.style.top=Math.max(8,r.top-ip.offsetHeight-8)+"px"}
 document.addEventListener("pointerover",ipucu);document.addEventListener("focusin",ipucu);
-window.addEventListener("hashchange",()=>{if(route()!=="kuran"&&CAL){calDur();CAL.acik=false}if(!W){Q=null;F=null;MENU=false;KMENU=false;if(BUYUK)buyutDegis(false);render();scrollTo(0,0)}});
+window.addEventListener("hashchange",()=>{if(route()!=="kuran"&&CAL){calDur();CAL.acik=false}if(!W){Q=null;F=null;MENU=false;KMENU=false;SHEET=null;if(BUYUK)buyutDegis(false);render();scrollTo(0,0)}});
 document.addEventListener("fullscreenchange",()=>{if(!document.fullscreenElement&&BUYUK){BUYUK=false;render()}});
 let kayBas=null;
 document.addEventListener("touchstart",e=>{if(BUYUK&&e.touches.length===1)kayBas={x:e.touches[0].clientX,y:e.touches[0].clientY}},{passive:true});
 document.addEventListener("touchend",e=>{if(!BUYUK||!kayBas||!O)return;const t=e.changedTouches[0],dx=t.clientX-kayBas.x,dy=t.clientY-kayBas.y;kayBas=null;
   if(Math.abs(dx)>80&&Math.abs(dy)<50){sayfayaGit(O.m+(dx>0?1:-1));const k=$(".tam-mushaf");if(k)k.scrollTop=0}},{passive:true});
-document.addEventListener("keydown",e=>{if(BUYUK&&O&&(e.key==="ArrowLeft"||e.key==="ArrowRight")){sayfayaGit(O.m+(e.key==="ArrowLeft"?1:-1));return}if(e.key!=="Escape")return;if(BUYUK){buyutDegis(false);return}if(MENU||KMENU){MENU=KMENU=false;render()}else if(F){F=null;render()}});
+document.addEventListener("keydown",e=>{if(BUYUK&&O&&(e.key==="ArrowLeft"||e.key==="ArrowRight")){sayfayaGit(O.m+(e.key==="ArrowLeft"?1:-1));return}if(e.key!=="Escape")return;if(BUYUK){buyutDegis(false);return}if(SHEET){SHEET=null;render();return}if(MENU||KMENU){MENU=KMENU=false;render()}else if(F){F=null;render()}});
 /* Tercihler açılışta ve içe aktarmadan sonra Depo'dan okunup uygulanır */
 function tercihleriUygula(){
   const t=Depo.tercih.oku("tema");if(t)document.documentElement.setAttribute("data-theme",t);else document.documentElement.removeAttribute("data-theme");
   const h=Depo.tercih.oku("hat2");HAT=h==="m"||h==="b"||h==="d"?h:"d";
   const g=Depo.tercih.oku("gorunum");KG=KG_AD[g]?g:"a";
   const z=Depo.tercih.oku("zemin");ZEMIN=z&&ZEMINLER.some(x=>x[0]===z)?z:"oto";
-  const o=+Depo.tercih.oku("boyut",1);ORAN=o>=.8&&o<=1.6?o:1;document.documentElement.style.setProperty("--oran",ORAN)}
+  const o=+Depo.tercih.oku("boyut",1);ORAN=o>=.8&&o<=1.6?o:1;document.documentElement.style.setProperty("--oran",ORAN);
+  const dn=Depo.tercih.oku("dinle");if(dn&&typeof dn==="object"){if(dn.hiz>=.5&&dn.hiz<=3)DINLE.hiz=dn.hiz;if(dn.tekrar>=0)DINLE.tekrar=dn.tekrar;if(dn.ayet>=1)DINLE.ayet=dn.ayet}}
 (async function(){
   tercihleriUygula();
   $("#app").innerHTML=`<div class="yukleniyor">Defter açılıyor…</div>`;
