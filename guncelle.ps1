@@ -9,7 +9,7 @@ Copy-Item "$kok\github-yukle\*" $PSScriptRoot -Force
 Set-Location $PSScriptRoot
 git add -A
 if (git status --porcelain) {
-  git commit -q -m ("Güncelleme " + (Get-Date -Format 'yyyy-MM-dd HH:mm'))
+  git commit -q -m ("Güncelleme " + (Get-Date -Format 'yyyy-MM-dd HH:mm') + "`n`nCo-Authored-By: Claude Opus 5.5 <noreply@anthropic.com>`nClaude-Session: https://claude.ai/code/session_01JwhHb5jgiWjvFWChhvJjxg")
   git push
   Write-Host "Yeni sürüm gönderildi. Uygulama internete bağlanınca kendisi güncellenir."
 } else { Write-Host "Değişiklik yok." }
