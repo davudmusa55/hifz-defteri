@@ -8,7 +8,9 @@
  *     IndexedDB kullanılamazsa (bazı gizli pencereler) localStorage'a düşer.
  *   - Tercihler (tema, hat, meal görünümü, yazı boyutu, mushaf zemini): localStorage, "hifz-defteri-v1-<ad>".
  *     Açılışta ekran çizilmeden önce eşzamanlı okunmaları gerektiği için burada durur.
- *   - İndirilen Fatih Çollak sesleri: Cache Storage "ses-collak" (servis çalışanı da buradan çalar).
+ *   - İndirilen sesler: Fatih Çollak sure kayıtları Cache Storage "ses-collak", ayet ayet kayıtlı hafızlar "ses-ayet"
+ *     (adres anahtarıyla; servis çalışanı da buradan çalar). Hangi surelerin indiği tercihlerde ("ses", "ses-<hafız>").
+ *   - Kayıt biçimi değişirken eski defterin bir kopyası: IndexedDB "defter-v<eski sürüm>-yedek" (bir kez yazılır).
  *
  * İleride hesap sistemi: `Depo.adaptorSec(adaptor)` ile aynı arayüzü ({ad, oku, yaz, sil}) uygulayan
  * bir sunucu adaptörü takılabilir. Defter kayıtları `guncelleme` zamanı ve `cihaz` kimliği taşıdığı için
@@ -19,9 +21,9 @@
   const DB_AD = "hifz-defteri", DB_SURUM = 1, TABLO = "kayit", DEFTER = "defter";
   const ESKI_ANAHTAR = "hifz-defteri-v1";            // eski sürümlerde defterin localStorage anahtarı
   const TERCIH_ON = "hifz-defteri-v1-";
-  const SES_CACHE = "ses-collak";
+  const SES_CACHE = "ses-collak", AYET_CACHE = "ses-ayet";
   const YEDEK_FORMAT = "hifz-defteri-yedek", YEDEK_SURUM = 1;   // dışa aktarma dosyasının biçim sürümü
-  const TERCIH_ADLARI = ["tema", "hat2", "gorunum", "zemin", "boyut", "dinle"]; // yedeğe giren tercihler
+  const TERCIH_ADLARI = ["tema", "hat2", "gorunum", "zemin", "boyut", "dinle", "kari"]; // yedeğe giren tercihler
 
   /* ---------- Tercihler (küçük, eşzamanlı) ---------- */
   const tercih = {
@@ -177,17 +179,36 @@
     tercih.yukle(tercihler);
   }
 
-  /* ---------- İndirilen sesler (Cache Storage) ---------- */
+  /* Kayıt biçimi değişmeden önceki defter: dönüşümde bir sorun çıkarsa geri dönebilmek için bir kez saklanır */
+  async function donusumYedegi(veri, surum) {
+    const anahtar = "defter-v" + surum + "-yedek";
+    try { if (await adaptor.oku(anahtar)) return; await adaptor.yaz(anahtar, { veri, guncelleme: Date.now(), cihaz: cihazId() }); } catch (e) { }
+  }
+
+  /* ---------- İndirilen sesler (Cache Storage) ----------
+     k = hafız anahtarı. "collak": sure başına tek dosya (ses-collak). Diğerleri: ayet başına dosya, adresiyle ses-ayet içinde. */
+  const sesTercih = k => k && k !== "collak" ? "ses-" + k : "ses";
+  const sesYanit = blob => new Response(blob, { headers: { "Content-Type": "audio/mpeg", "Content-Length": String(blob.size) } });
   const ses = {
-    boyutlar() { return tercih.oku("ses", {}) || {}; },
-    var(s) { return !!ses.boyutlar()[s]; },
+    boyutlar(k) { return tercih.oku(sesTercih(k), {}) || {}; },
+    var(s, k) { return !!ses.boyutlar(k)[s]; },
     destek() { return "caches" in window; },
-    async kaydet(s, anahtar, blob) {
+    async kaydet(s, anahtar, blob) {               // Fatih Çollak sure kaydı
       const c = await caches.open(SES_CACHE);
-      await c.put(anahtar, new Response(blob, { headers: { "Content-Type": "audio/mpeg", "Content-Length": String(blob.size) } }));
-      const o = ses.boyutlar(); o[s] = blob.size; tercih.yaz("ses", o);
+      await c.put(anahtar, sesYanit(blob));
+      const o = ses.boyutlar("collak"); o[s] = blob.size; tercih.yaz("ses", o);
     },
-    async temizle() { try { await caches.delete(SES_CACHE); } catch (e) { } tercih.yaz("ses", null); }
+    async ayetKaydet(k, s, dosyalar) {             // bir surenin ayet dosyaları: [{url, blob}]
+      const c = await caches.open(AYET_CACHE);
+      let boyut = 0;
+      for (const d of dosyalar) { await c.put(d.url, sesYanit(d.blob)); boyut += d.blob.size; }
+      const o = ses.boyutlar(k); o[s] = boyut; tercih.yaz(sesTercih(k), o);
+    },
+    async temizle(k, onEk) {                       // onEk: o hafızın dosya adreslerinin başı
+      if (!k || k === "collak") { try { await caches.delete(SES_CACHE); } catch (e) { } tercih.yaz("ses", null); return; }
+      try { const c = await caches.open(AYET_CACHE); for (const r of await c.keys()) if (r.url.startsWith(onEk)) await c.delete(r); } catch (e) { }
+      tercih.yaz(sesTercih(k), null);
+    }
   };
 
   /* ---------- Kalıcılık ve bilgi ---------- */
@@ -201,7 +222,7 @@
 
   window.Depo = Object.freeze({
     YEDEK_SURUM,
-    hazirla, eskiHesaptanTasi,
+    hazirla, eskiHesaptanTasi, donusumYedegi,
     defterOku, defterYaz, defterYazHemen, bosalt,
     async defterSil() { await adaptor.sil(DEFTER); },
     tercih, ses,

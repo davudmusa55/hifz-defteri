@@ -565,26 +565,31 @@ html,body{margin:0;padding:0}
 
 <script id="engine">
 /* ---------- Mushaf bilgisi ----------
-   İç kimlik (m): 1 = Fâtiha, 2-601 = 30 cüz × 20 sayfa, 602-604 = son sureler.
-   Görünen numara Diyanet mushafı numarasıdır (s.0 - s.604). */
-const SURAH_STARTS=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,332,342,350,359,367,377,385,396,404,411,415,418,428,434,440,446,453,458,467,477,483,489,496,499,502,507,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,566,568,570,572,574,575,577,578,580,582,583,585,586,587,587,589,590,591,591,592,593,594,595,595,596,596,597,597,598,598,599,599,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
+   Sayfa düzeni Diyanet mushafınındır (diyanet-metin.json "p"; metin dosyaları kaynak/diyanet-sayfala.js ile bu düzene bölündü).
+   İç kimlik (m): 1 = Fâtiha, 2-601 = 30 cüz × 20 sayfa, 602-605 = son dört sayfa (hazırlık).
+   Görünen numara Diyanet mushafı numarasıdır: s = m - 1 (s.0 - s.604).
+   Medine düzeninden farkı 30. cüzdedir: Diyanet'te sureler sayfa ortasında başlar, cüz 20 + 4 sayfadır. */
+const SURAH_STARTS=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,332,342,350,359,367,377,385,396,404,411,415,418,428,434,440,446,453,458,467,477,483,489,496,499,502,507,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,566,568,570,572,574,575,577,578,580,582,583,585,586,587,588,589,590,591,592,592,593,594,595,596,596,597,597,598,599,599,600,600,601,601,602,602,602,603,603,603,604,604,604,605,605,605];
+const AYET_SAYI=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 const SURAH_TR=["Fâtiha","Bakara","Âl-i İmrân","Nisâ","Mâide","En'âm","A'râf","Enfâl","Tevbe","Yûnus","Hûd","Yûsuf","Ra'd","İbrâhîm","Hicr","Nahl","İsrâ","Kehf","Meryem","Tâ-Hâ","Enbiyâ","Hac","Mü'minûn","Nûr","Furkân","Şuarâ","Neml","Kasas","Ankebût","Rûm","Lokmân","Secde","Ahzâb","Sebe'","Fâtır","Yâsîn","Sâffât","Sâd","Zümer","Mü'min","Fussilet","Şûrâ","Zuhruf","Duhân","Câsiye","Ahkâf","Muhammed","Fetih","Hucurât","Kâf","Zâriyât","Tûr","Necm","Kamer","Rahmân","Vâkıa","Hadîd","Mücâdele","Haşr","Mümtehine","Saf","Cuma","Münâfikûn","Teğâbün","Talâk","Tahrîm","Mülk","Kalem","Hâkka","Meâric","Nûh","Cin","Müzzemmil","Müddessir","Kıyâmet","İnsan","Mürselât","Nebe'","Nâziât","Abese","Tekvîr","İnfitâr","Mutaffifîn","İnşikâk","Bürûc","Târık","A'lâ","Gâşiye","Fecr","Beled","Şems","Leyl","Duhâ","İnşirâh","Tîn","Alak","Kadir","Beyyine","Zilzâl","Âdiyât","Kâria","Tekâsür","Asr","Hümeze","Fîl","Kureyş","Mâûn","Kevser","Kâfirûn","Nasr","Tebbet","İhlâs","Felak","Nâs"];
 const TUR_AD=["Hazırlık","Birler","İkiler","Üçler","Dörtler","Beşler","Altılar","Yediler","Sekizler","Dokuzlar","Onlar","On birler","On ikiler","On üçler","On dörtler","On beşler","On altılar","On yediler","On sekizler","On dokuzlar","Yirmiler"];
-const HAZIRLIK=[1,604,603,602];
-const TOPLAM=604,SATIR=15;
+const HAZIRLIK=[1,605,604,603,602];
+const TOPLAM=605,SATIR=15;
 /* Sayfa uzunluğu: Fâtiha ve Bakara'nın ilk sayfası ayet ayet çalışılır.
    Diğer sayfalarda sure başı ve besmele satır yer kaplar. */
 const OZEL={1:[7,"ayet"],2:[5,"ayet"]};
 const SURE_YER=(()=>{const o={};SURAH_STARTS.forEach((p,i)=>{o[p]=(o[p]||0)+(i===8?1:2)});return o})();
 const satirOf=m=>OZEL[m]?OZEL[m][0]:Math.max(5,SATIR-(SURE_YER[m]||0));
 const birimOf=m=>OZEL[m]?OZEL[m][1]:"satır";
-const dOf=m=>m===1?0:m<=601?m-1:m;                       // iç kimlik -> Diyanet sayfası
-const idOfD=d=>d<=0?1:d<=600?d+1:Math.max(602,Math.min(604,d));
+const dOf=m=>m-1;                                         // iç kimlik -> Diyanet sayfası
+const idOfD=d=>Math.max(1,Math.min(TOPLAM,Math.round(d)+1));
 const juzOf=m=>m<=1?1:m>=602?30:Math.floor((m-2)/20)+1;
 const pageInJuz=m=>m<=1?0:m>=602?21:(m-2)%20+1;
-const juzRange=j=>[j===1?1:20*(j-1)+2, j===30?604:20*j+1];
+const juzRange=j=>[j===1?1:20*(j-1)+2, j===30?TOPLAM:20*j+1];
 const pageOf=(j,p)=>20*(j-1)+p+1;
-const surahEnd=s=>s>=114?604:Math.max(SURAH_STARTS[s-1],SURAH_STARTS[s]-1);
+/* Surenin son ayetinin sayfası (bir sure, sonrakinin başladığı sayfada bitebilir) */
+const SURE_SON=[1,49,76,106,127,150,176,186,207,221,235,248,255,261,267,281,293,304,312,321,331,341,349,359,366,376,385,396,404,410,414,417,427,434,440,445,452,458,467,476,482,489,495,498,502,506,510,515,517,520,523,525,528,531,534,537,541,545,548,551,552,554,555,557,559,561,564,566,568,570,571,573,575,577,578,580,581,583,584,586,587,587,589,590,591,591,592,593,594,595,595,596,597,597,598,598,599,599,600,600,601,601,602,602,602,603,603,603,604,604,604,605,605,605];
+const surahEnd=s=>SURE_SON[s-1];
 function surahsOn(m){const o=[];for(let s=1;s<=114;s++)if(SURAH_STARTS[s-1]<=m&&surahEnd(s)>=m)o.push(s);
   if(!o.length){for(let s=114;s>=1;s--)if(SURAH_STARTS[s-1]<=m){o.push(s);break}}return o}
 function surahsInJuz(j){const[a,b]=juzRange(j);const o=[];for(let s=1;s<=114;s++)if(SURAH_STARTS[s-1]<=b&&surahEnd(s)>=a)o.push(s);return o}
@@ -668,7 +673,8 @@ function learnChunk(st,u,day,w){
   const got=Math.max(st.parts[u.m]||0,u.c||u.b);
   if(got>=satirOf(u.m)){st.pages[u.m]={l:day,r:day,w:w==null?1:w,n:1};delete st.parts[u.m];
     if(!st.flags.t10&&firstOpenIndex(st)>=H+300){st.flags.t10=1;st.haslama=10}}
-  else st.parts[u.m]=got}
+  else{st.parts[u.m]=got;
+    if(st.ust&&st.ust[u.m]==null)st.ust[u.m]=icAlt(st,u.m)?2:1}}   // yarım kalan sayfa başladığı yönden biter; ayar sonradan değişse de satırlar karışmaz
 function review(st,m,g,day){const pg=st.pages[m];if(!pg)return;pg.r=day;pg.n=(pg.n||0)+1;
   pg.w=g===2?Math.min(2,pg.w+1):g===1?1:0}
 const isStudyDay=(P,d)=>P.days.includes(weekdayOf(d));
@@ -692,9 +698,10 @@ function simulate(st,from,opts){
     if(opts.tur){const t=firstOpenIndex(c)>=QUEUE.length?21:turOfIndex(firstOpenIndex(c));for(let k=1;k<t;k++)if(!turlar[k])turlar[k]=d}
     if(p.mode==="hatim"&&end==null){end=d;if(!opts.collect)break}}
   return{list,end,turlar,finalCycle:cycleInfo(c).cycle}}
-function blankState(){return{v:5,benzer:[],bzLog:{},ust:{},haz:{},updated:0,profile:null,pages:{},parts:{},flags:{},haslama:0,plans:{},log:{},hist:{}}}
+const DEFTER_V=6;   // defter kayıt biçimi sürümü; değişirse migrate içine dönüşüm ekle
+function blankState(){return{v:DEFTER_V,benzer:[],bzLog:{},ust:{},haz:{},updated:0,profile:null,pages:{},parts:{},flags:{},haslama:0,plans:{},log:{},hist:{}}}
 function migrate(s){
-  if(!s||s.v===5)return s;
+  if(!s||s.v===6)return s;
   if(s.v===1){
     if(s.profile){s.profile.lines=(s.profile.units||3)*5;delete s.profile.units}
     const parts={};for(const m in s.parts||{}){let n=0;for(let b=0;b<3;b++)if(s.parts[m]&(1<<b))n+=5;if(n)parts[m]=n}
@@ -718,7 +725,51 @@ function migrate(s){
     const t=todayNum();for(const d in s.plans){const p=s.plans[d];if(+d>=t&&!Object.keys(p.done).length&&!p.skipped)delete s.plans[d]}
     s.v=4}
   if(s.v===4){s.benzer=s.benzer||[];s.bzLog=s.bzLog||{};s.v=5}
+  if(s.v===5){diyanetDuzeneGec(s);s.v=6}
   return s}
+/* Sürüm 6: 30. cüz Medine sayfa düzeninden Diyanet düzenine geçti (583. sayfadan sonrası).
+   Eski sayfalardaki ilerleme ayet ayet yeni sayfalara taşınır: yeni sayfanın ayetlerinin en az yarısı
+   ezberlenmiş eski sayfalardaysa ezberlenmiş sayılır, tekrar tarihi en eskisinden, güç en zayıfından alınır. */
+const MEDINE_30=[[78,31,79,15],[79,16,79,46],[80,1,80,42],[81,1,81,29],[82,1,83,6],[83,7,83,34],[83,35,84,25],[85,1,85,22],[86,1,87,15],[87,16,88,26],[89,1,89,23],[89,24,90,20],[91,1,92,14],[92,15,94,8],[95,1,96,19],[97,1,98,7],[98,8,100,9],[100,10,102,8],[103,1,105,5],[106,1,108,3],[109,1,111,5],[112,1,114,6]];
+const DIYANET_30=[[78,31,79,14],[79,15,79,46],[80,1,80,33],[80,34,81,20],[81,21,82,19],[83,1,83,26],[83,27,84,13],[84,14,85,11],[85,12,86,17],[87,1,88,11],[88,12,89,14],[89,15,90,7],[90,8,91,15],[92,1,93,3],[93,4,95,5],[95,6,96,19],[97,1,98,8],[99,1,100,11],[101,1,102,8],[103,1,105,5],[106,1,108,3],[109,1,111,5],[112,1,114,6]];
+function aralikAyetleri([s1,v1,s2,v2]){const o=[];for(let s=s1;s<=s2;s++)for(let v=s===s1?v1:1;v<=(s===s2?v2:AYET_SAYI[s-1]);v++)o.push(s+":"+v);return o}
+function diyanetDuzeneGec(s){
+  const eskiSayfa={},yeniSayfa={};
+  MEDINE_30.forEach((r,i)=>aralikAyetleri(r).forEach(k=>eskiSayfa[k]=583+i));
+  DIYANET_30.forEach((r,i)=>aralikAyetleri(r).forEach(k=>yeniSayfa[k]=583+i));
+  const yeniOf=m=>m<583?m:yeniSayfa[aralikAyetleri(MEDINE_30[m-583])[0]];   // eski sayfanın ilk ayetinin yeni sayfası
+  const yeniSonOf=m=>m<583?m:yeniSayfa[aralikAyetleri(MEDINE_30[m-583]).at(-1)];
+  const eski=s.pages||{},pages={};
+  for(const m in eski)if(+m<583)pages[m]=eski[m];
+  DIYANET_30.forEach((r,i)=>{const P=583+i,ay=aralikAyetleri(r),say={};
+    ay.forEach(k=>{const o=eskiSayfa[k];say[o]=(say[o]||0)+1});
+    const ogren=Object.keys(say).filter(o=>eski[o]&&eski[o].l!=null);
+    const agirlik=ogren.reduce((t,o)=>t+say[o],0)/ay.length;
+    if(agirlik<.5)return;
+    const bas=ogren.sort((a,b)=>say[b]-say[a])[0],l=ogren.map(o=>eski[o]),pg=Object.assign({},eski[bas]);
+    pg.r=Math.min(...l.map(x=>x.r));pg.w=Math.min(...l.map(x=>x.w));pg.n=Math.min(...l.map(x=>x.n||0));
+    if(l.every(x=>x.known))pg.known=1;else delete pg.known;
+    pages[P]=pg});
+  const P0=s.profile;
+  if(P0&&P0.known&&P0.known[30]){                 // profilde bilinen olarak işaretlenen 30. cüz aralığı yeni düzende yeniden hesaplanır
+    const v=P0.parts&&P0.parts[30],[ja,jb]=juzRange(30);
+    if(P0.known[30]==="part"&&v){if(v.sayfa){v.a=yeniOf(v.a);v.b=yeniSonOf(v.b)}else{v.a=Math.max(ja,SURAH_STARTS[v.s1-1]);v.b=Math.min(jb,surahEnd(v.s2))}if(v.b<v.a)v.b=v.a}
+    const[a,b]=P0.known[30]==="full"?[ja,jb]:v?[v.a,v.b]:[0,-1];
+    const bilinen=Object.values(pages).filter(x=>x.known),r=bilinen.length?Math.min(...bilinen.map(x=>x.r)):todayNum()-1;
+    for(let m=a;m<=b;m++)if(!pages[m])pages[m]={l:0,r,w:P0.strength&&P0.strength[30]!=null?P0.strength[30]:2,n:0,known:1}}
+  s.pages=pages;
+  for(const m of Object.keys(s.parts||{}))if(+m>=583)delete s.parts[m];   // yarım kalan eski sayfa yeni düzende baştan alınır
+  const tasi=o=>{if(!o)return o;const y={};for(const k in o)y[yeniOf(+k)]=o[k];return y};
+  s.ust=tasi(s.ust);
+  const t=todayNum();
+  for(const d in s.plans||{}){const p=s.plans[d];
+    if(+d>=t&&!Object.keys(p.done||{}).length&&!p.skipped){delete s.plans[d];continue}
+    (p.ham||[]).forEach(u=>{if(u.m>=583){u.m=yeniOf(u.m);const n=satirOf(u.m);u.b=Math.min(u.b,n);u.a=Math.min(u.a,u.b);if(u.c)u.c=Math.min(u.c,n)}});
+    const done={};for(const k in p.done||{}){const tur=k[0];done[(tur==="t"||tur==="s")?tur+yeniOf(+k.slice(1)):k]=p.done[k]}p.done=done;
+    p.taze=[...new Set((p.taze||[]).map(yeniOf))];p.has=[...new Set((p.has||[]).map(yeniOf))]}
+  for(const d in s.hist||{}){const h=s.hist[d];if(h.z)h.z=tasi(h.z);if(h.pg)h.pg=[...new Set(h.pg.map(yeniOf))]}
+  if(s.sonOku)s.sonOku=yeniOf(s.sonOku);
+  s.oneri=null}
 function applyProfile(st,W){
   const start=W.start,known={};
   for(let j=1;j<=30;j++){const k=W.known[j];if(!k)continue;
@@ -861,7 +912,9 @@ function hamYenile(p){
     const yap=bitmis.filter(x=>(x.u.g||0)===g).reduce((a,x)=>a+x.u.b-x.u.a+1,0);
     if(g===0&&yap&&h.mood!=null)continue;
     const n=L>=SATIR?(yap?0:L):L-yap;if(n<=0)continue;
-    nextChunks(S,n,taken).forEach(u=>{u.g=g;ham.push(u);taken.push(u)})}
+    let yeniP=nextChunks(S,n,taken);
+    if(yap){const pm=bitmis.filter(x=>(x.u.g||0)===g).at(-1).u.m;yeniP=yeniP.filter(u=>u.m===pm)}   // yarısı yapılmış ders yalnızca kendi sayfasından tamamlanır
+    yeniP.forEach(u=>{u.g=g;ham.push(u);taken.push(u)})}
   p.ham=ham;p.done=done;p.tab=tab;p.ek=ek}
 function regenToday(){const d=todayNum(),p=S.plans[d];if(!p)return;
   if(!Object.keys(p.done).length&&!p.skipped&&!p.ek){delete S.plans[d];return}
@@ -984,7 +1037,7 @@ function hazirlikKart(p){if(!metin())loadQuran().then(render).catch(()=>{});
   if(!m)return`<div class="kart ders kol" style="gap:8px"><h2>Bu gün yeni ders yok</h2><p>Tekrar günü. Sayfaların Plan bölümünde.</p></div>`;
   const ss=surahsOn(m);
   return`<div class="kart ders kol" style="gap:10px"><div class="kol" style="gap:6px"><span class="kucuk soluk">Derse hazırlan</span>${dersUl(p.ham,true)}</div>
-  <ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px"><li>Sayfayı bakarak (yüzüne) 3–5 kez akıcı oku.</li><li>Doğru okunuşunu dinle: ${(sayfaSesleri(m).length?sayfaSesleri(m).map(x=>`<a href="${x.u}" target="_blank" rel="noopener">Fatih Çollak, s.${dOf(m)} (${x.ad})</a>`):ss.map(s=>`<a href="${collakUrl(s)}" target="_blank" rel="noopener">Fatih Çollak, ${SURAH_TR[s-1]}</a>`)).join(", ")}.</li><li>Anlamına bak: <a href="https://quran.com/tr/page/${m}" target="_blank" rel="noopener">Türkçe meal</a>.</li><li>Uyumadan önce bir kez daha bakarak oku.</li></ol>
+  <ol style="margin:0;padding-left:22px;display:flex;flex-direction:column;gap:4px"><li>Sayfayı bakarak (yüzüne) 3–5 kez akıcı oku.</li><li>Doğru okunuşunu dinle: ${SES_OK?`<button class="dug yalin" data-okudinle="${m}">s.${dOf(m)} sayfasını dinle (${KARI.ad})</button>`:sayfaLinkleri(m).map(x=>`<a href="${x.u}" target="_blank" rel="noopener">${x.ad}</a>`).join(", ")}.</li><li>Anlamına bak: <button class="dug yalin" data-okumeal="${m}">Diyanet meali</button>.</li><li>Uyumadan önce bir kez daha bakarak oku.</li></ol>
   <div class="sira"><button class="dug ana" data-oku="${m}" data-a="${p.ham[0].a}" data-b="${p.ham[0].b}" data-c="${p.ham[0].c||""}">Sayfayı aç</button><button class="dug" data-hazir2="${p.d}" aria-pressed="${!!hazir}">${hazir?"Hazırlandım ✓":"Hazırlandım"}</button></div></div>`}
 function ekranYarin(){
   const p=yarinPlan();if(!p)return`<div class="kol">${segme("yarin")}<h1>Yakında ders görünmüyor</h1></div>`;
@@ -1199,7 +1252,7 @@ function ekranIlerleme(){
 
 /* ---------- Sınav ---------- */
 function ekranSinav(){
-  const adaylar=Object.keys(S.pages).map(Number).filter(m=>S.pages[m].l!=null&&m<=604);
+  const adaylar=Object.keys(S.pages).map(Number).filter(m=>S.pages[m].l!=null&&m<=TOPLAM);
   if(!adaylar.length)return`<div class="kol"><h1>Kendini sına</h1><div class="kart"><p>Sınav, ezberlediğin sayfalardan soru sorar. İlk sayfanı tamamlayınca burası açılır.</p></div></div>`;
   if(!Q)return`<div class="kol"><div class="kol" style="gap:6px"><h1>Kendini sına</h1><p class="soluk">Bir ayet gösteririm, sonrasını içinden okursun. Sonra cevabı açıp kendini değerlendirirsin.</p></div>
   <div class="kart kol"><div class="kol" style="gap:8px"><button class="secim" data-sinav="hepsi"><b>Bütün ezberim</b><span class="soluk">${adaylar.length} sayfa, 10 soru</span></button>
@@ -1213,8 +1266,8 @@ function ekranSinav(){
 async function sinavBasla(tur){
   Q={yuk:1};render();
   try{await loadQuran()}catch(e){Q=null;tost("Metin yüklenemedi, internetini kontrol et");render();return}
-  let sayfalar=Object.keys(S.pages).map(Number).filter(m=>S.pages[m].l!=null&&m<=604&&(tur==="hepsi"||S.pages[m].w<2));
-  if(!sayfalar.length)sayfalar=Object.keys(S.pages).map(Number).filter(m=>S.pages[m].l!=null&&m<=604);
+  let sayfalar=Object.keys(S.pages).map(Number).filter(m=>S.pages[m].l!=null&&m<=TOPLAM&&(tur==="hepsi"||S.pages[m].w<2));
+  if(!sayfalar.length)sayfalar=Object.keys(S.pages).map(Number).filter(m=>S.pages[m].l!=null&&m<=TOPLAM);
   const sor=[];
   for(let d=0;d<200&&sor.length<10;d++){
     const m=sayfalar[Math.floor(Math.random()*sayfalar.length)],l=metin()[m-1];
@@ -1243,9 +1296,9 @@ function ekranUsul(){return`<div class="yazi"><h1>Osmanlı usulü nasıl işler?
 <h2>Bu uygulama planı nasıl çıkarıyor?</h2>
 <ul><li>Bir günde yeni ders tek sayfadan verilir: 5 satır seçtiysen her gün 5 satır. Sayfada daha az satır kaldıysa o gün kalan kadar verilir, iki sayfa karışmaz.</li><li>Ayırdığın süre günün tamamıdır. Yeni ezber en çok yarısını alır, kalanı tekrarlarına gider.</li><li>Her gün sıradaki yeni dersi verir. Dersi verince süreni ve nasıl geçtiğini sorar, hızını buna göre günceller.</li><li>Yeni sayfa 1, 2, 3 ve 7 gün sonra <b>taze tekrar</b> olarak geri gelir. Araştırmalar en çok ilk günlerdeki tekrarların aksadığını gösteriyor.</li><li>Geri kalan süre <b>has tekrara</b> gider. Zor işaretlediğin sayfa daha sık, akıcı olan daha seyrek döner.</li><li>Bir günü kaçırırsan plan bozulmaz, sıradaki gün kaldığın yerden hesaplanır.</li><li>Birikme fazlaysa yeni ders durur ve önce tekrar gelir. Onların sonunda 10 günlük haslama vardır.</li><li>Benzer ayetler defterinde çift varsa günlük süreden 3 dakika ona ayrılır. Çiftler 1, 3, 7, 14, 30 ve 60 gün arayla döner, karıştırırsan yeniden başlar. Bu aralıklar uygulamanın kendi hesabıdır.</li></ul>
 <h2>Bilmen gerekenler</h2>
-<ul><li>Sayfa numaraları Diyanet'in bilgisayar hatlı mushafına göredir (s.0 - s.604). Fâtiha s.0'dır, cüzler s.1'den itibaren 20'şer sayfadır.</li><li>Okuma ekranındaki Diyanet hattı, Diyanet İşleri Başkanlığı mushafının Türk imlasındaki metnidir (açık kaynak alperenugus/Kuran projesi üzerinden, CC BY 4.0) ve Diyanet'in Shaikh Hamdullah yazı tipiyle gösterilir. İstersen okuma ayarlarından sade yazıma ya da Medine hattına geçebilirsin.</li><li>Sayfa sınırları Medine düzeninden gelir. 30. cüzde Diyanet sayfalarıyla küçük farklar vardır.</li><li>Fâtiha ile son üç sayfa 20 sayfalık düzenin dışında kalır. Plan bunları en başa, hazırlık olarak koyar.</li><li>Fâtiha ve Bakara'nın ilk sayfası kısa olduğu için ayet ayet çalışılır. Sure başı olan sayfalarda da satır sayısı daha azdır. Bu sayılar yaklaşıktır.</li><li>Hocalar ve kurslar arasında usulün ayrıntıları değişir. Günlük tempo, tekrar günleri ve haslama süresi bu uygulamanın kendi hesabıdır, klasik bir kural değildir.</li><li>Uygulama bir hocanın yerini tutmaz. Tecvid ve ezberini mutlaka bir hocaya dinlet.</li></ul>
+<ul><li>Sayfa numaraları Diyanet'in bilgisayar hatlı mushafına göredir (s.0 - s.604). Fâtiha s.0'dır, cüzler s.1'den itibaren 20'şer sayfadır.</li><li>Okuma ekranındaki Diyanet hattı, Diyanet İşleri Başkanlığı mushafının Türk imlasındaki metnidir (açık kaynak alperenugus/Kuran projesi üzerinden, CC BY 4.0) ve Diyanet'in Shaikh Hamdullah yazı tipiyle gösterilir. İstersen okuma ayarlarından sade yazıma ya da Medine hattına geçebilirsin.</li><li>Sayfa sınırları her hatta Diyanet mushafınındır. 30. cüzde Diyanet, Medine mushafından farklı böler: sureler çoğu zaman sayfa ortasında başlar.</li><li>Fâtiha ile son dört sayfa (s.601-604) 20 sayfalık düzenin dışında kalır. Plan bunları en başa, hazırlık olarak koyar.</li><li>Fâtiha ve Bakara'nın ilk sayfası kısa olduğu için ayet ayet çalışılır. Sure başı olan sayfalarda da satır sayısı daha azdır. Bu sayılar yaklaşıktır.</li><li>Hocalar ve kurslar arasında usulün ayrıntıları değişir. Günlük tempo, tekrar günleri ve haslama süresi bu uygulamanın kendi hesabıdır, klasik bir kural değildir.</li><li>Uygulama bir hocanın yerini tutmaz. Tecvid ve ezberini mutlaka bir hocaya dinlet.</li></ul>
 <h2>Kaynaklar</h2>
-<ul class="kucuk"><li>Kuran metni, sade yazım: <a href="https://tanzil.net">Tanzil Projesi</a> (CC BY 3.0, değiştirilmeden kullanıldı)</li><li><a href="https://kuran.diyanet.gov.tr/kuran">Diyanet Kur'an Platformu</a> (sayfa numaraları)</li><li><a href="https://egitimhizmetleri.diyanet.gov.tr/Documents/Haf%C4%B1zl%C4%B1k%20E%C4%9Fitimi%20Program%C4%B1%20-%202010.pdf">Diyanet Hafızlık Eğitim Programı</a></li><li><a href="https://insanvehayat.com/kurani-kerim-ve-hafizlik/">İnsan ve Hayat: Kuran-ı Kerim ve Hafızlık</a></li><li><a href="https://www.dunyabizim.com/hafizlik-hakkinda-ne-biliyoruz">Dünya Bizim: Hafızlık hakkında ne biliyoruz?</a></li><li><a href="https://www.sozumoki.com/soz/hafizlik-nasil-yapilir-kurslarda-sistem-nasildir-215900">Sözümoki: Hafızlık nasıl yapılır?</a></li><li><a href="https://dergipark.org.tr/en/download/article-file/913080">Hafızlık eğitiminde tekrar araştırması (DergiPark)</a></li></ul></div>`}
+<ul class="kucuk"><li>Kuran metni, sade yazım: <a href="https://tanzil.net">Tanzil Projesi</a> (CC BY 3.0, değiştirilmeden kullanıldı)</li><li><a href="https://kuran.diyanet.gov.tr/kuran">Diyanet Kur'an Platformu</a> (sayfa numaraları)</li><li>Ayet ayet sesler: <a href="https://everyayah.com">EveryAyah</a> (Husarî, Minşâvî, Abdulbâsıt, Afâsî; akış olarak çalınır). Fatih Çollak sure kayıtları: archive.org.</li><li><a href="https://egitimhizmetleri.diyanet.gov.tr/Documents/Haf%C4%B1zl%C4%B1k%20E%C4%9Fitimi%20Program%C4%B1%20-%202010.pdf">Diyanet Hafızlık Eğitim Programı</a></li><li><a href="https://insanvehayat.com/kurani-kerim-ve-hafizlik/">İnsan ve Hayat: Kuran-ı Kerim ve Hafızlık</a></li><li><a href="https://www.dunyabizim.com/hafizlik-hakkinda-ne-biliyoruz">Dünya Bizim: Hafızlık hakkında ne biliyoruz?</a></li><li><a href="https://www.sozumoki.com/soz/hafizlik-nasil-yapilir-kurslarda-sistem-nasildir-215900">Sözümoki: Hafızlık nasıl yapılır?</a></li><li><a href="https://dergipark.org.tr/en/download/article-file/913080">Hafızlık eğitiminde tekrar araştırması (DergiPark)</a></li></ul></div>`}
 
 /* ---------- Ayarlar ---------- */
 let sifirlaOnay=false,KURULUM=null;
@@ -1275,7 +1328,7 @@ function yedekAlindi(m){S.sonYedek=todayNum();save();render();tost(m)}
 /* İçe aktarma iki adımlıdır: önce dosya çözülüp özeti gösterilir, onaydan sonra mevcut verinin üzerine yazılır */
 function iceAktarHazirla(girdi){
   try{const y=Depo.yedekCoz(girdi),d=migrate(JSON.parse(JSON.stringify(y.defter)));
-    if(!d||d.v!==5||typeof d.pages!=="object"||!d.profile)throw new Error("Dosyadaki defter eksik ya da bozuk.");
+    if(!d||d.v!==DEFTER_V||typeof d.pages!=="object"||!d.profile)throw new Error("Dosyadaki defter eksik ya da bozuk.");
     ICE={defter:d,tercihler:y.tercihler,surum:y.surum,olusturma:y.olusturma};render();
     const e=$(".ice-onay");if(e)e.scrollIntoView({block:"center",behavior:"smooth"})}
   catch(e){ICE=null;render();tost(e&&e.message?e.message:"Bu dosya okunamadı")}}
@@ -1420,7 +1473,7 @@ function sayfaStil(){const koyu=ZEMIN==="#1B1B1E"||(ZEMIN==="oto"&&koyuMu());ret
 function kgSec(k){KG=k;Depo.tercih.yaz("gorunum",k);if(k!=="a"&&!MEAL)loadMeal().then(render).catch(()=>{tost("Meal yüklenemedi");KG="a";render()});render()}
 function okuyucuAlt(){const ss=surahsOn(O.m),n=tekrarlar[O.m+":"+O.a+":"+O.b]||0;
   return`<nav class="okuyucu-alt" aria-label="Okuma araçları">
-  ${SES_OK?`<button class="oa" data-dinle aria-pressed="${!!(CAL&&CAL.caliyor)}">${ikon("dinle")}<span>Dinle</span></button>`:(()=>{const sl=sayfaSesleri(O.m,O.a,O.b);return sl.length===1?`<a class="oa" href="${sl[0].u}" target="_blank" rel="noopener">${ikon("dinle")}<span>Dinle</span></a>`:sl.length>1||ss.length>1?`<button class="oa" data-kmenu>${ikon("dinle")}<span>Dinle</span></button>`:`<a class="oa" href="${collakUrl(ss[0]||1)}" target="_blank" rel="noopener">${ikon("dinle")}<span>Dinle</span></a>`})()}
+  ${SES_OK?`<button class="oa" data-dinle aria-pressed="${!!(CAL&&CAL.caliyor)}">${ikon("dinle")}<span>Dinle</span></button>`:`<button class="oa" data-kmenu>${ikon("dinle")}<span>Dinle</span></button>`}
   <button class="oa" data-gorunum>${ikon("meal")}<span>${KG_AD[KG]}</span></button>
   <button class="oa sayac-b" data-tekrar aria-label="Bir kez okudum, ${n} / 15"><b>${n}/15</b><span>Okudum</span></button>
   <button class="oa" data-hafiz aria-pressed="${O.mod==="gizli"}">${ikon("hafiz")}<span>Hafız modu</span></button>
@@ -1436,7 +1489,8 @@ function okuyucuMenu(){const ss=surahsOn(O.m);
   ${sec("Görünüm",`<div class="km-satir"><span>Koyu tema</span>${anahtar()}</div>
     <label class="alan" for="kboyut"><span class="sira ara"><span>Metin boyutu</span><b id="kboyutd">%${Math.round(ORAN*100)}</b></span><input type="range" id="kboyut" min="80" max="160" step="10" value="${Math.round(ORAN*100)}"></label>
     <span class="kucuk soluk">Mushaf arka planı</span><div class="zeminler">${ZEMINLER.map(([v,ad])=>`<button class="zemin-b" data-zemin="${v}" aria-pressed="${ZEMIN===v}" aria-label="${ad}" title="${ad}" style="${v==="oto"?"":"background:"+v}">${v==="oto"?"A":""}</button>`).join("")}</div>`)}
-  ${sec("Dinle",(SES_OK?`<button class="dug ana" data-dinle>Bu sayfayı dinle (Fatih Çollak)</button>${ss.map(s=>sesVar(s)?`<span class="not">✓ ${SURAH_TR[s-1]} bu cihazda, internetsiz çalar.</span>`:`<button class="dug" data-sesindir="${s}">${SURAH_TR[s-1]} suresini cihaza indir</button>`).join("")}<span class="indirdurum not">${INDIR&&INDIR.aktif?indirMetin():""}</span><span class="not">İndirilmeyen sureler internetten çalar. Hepsini Ayarlar'dan indirebilirsin.</span>`:(sayfaSesleri(O.m,O.a,O.b).length?`<b class="kucuk">Sadece bu ${O.a!=null?"ders":"sayfa"} (s.${dOf(O.m)})</b>${sayfaSesleri(O.m,O.a,O.b).map(x=>`<a class="km-link ana-link" href="${x.u}" target="_blank" rel="noopener">${ikon("dinle")} Fatih Çollak · ${x.ad}</a>`).join("")}<span class="not">Ses bu ayetten başlar, son ayette durur.</span><b class="kucuk" style="margin-top:6px">Surenin tamamı</b>`:""))+ss.map(s=>`<a class="km-link" href="${collakUrl(s)}" target="_blank" rel="noopener">Fatih Çollak · ${SURAH_TR[s-1]}</a>`).join("")+`<a class="km-link" href="https://quran.com/tr/page/${O.m}" target="_blank" rel="noopener">Quran.com · başka kâriler</a><span class="not">Ses yeni sekmede açılır ve internet ister.</span>`)}
+  ${sec("Dinle",SES_OK?`<button class="dug ana" data-dinle>Bu ${O.a!=null?"dersi":"sayfayı"} dinle</button><b class="kucuk" style="margin-top:6px">Hafız</b>${kariListe()}${ss.map(s=>sesVar(s)?`<span class="not">✓ ${SURAH_TR[s-1]} (${KARI.ad}) bu cihazda, internetsiz çalar.</span>`:`<button class="dug" data-sesindir="${s}">${SURAH_TR[s-1]} suresini cihaza indir</button>`).join("")}<span class="indirdurum not">${INDIR&&INDIR.aktif?indirMetin():""}</span><span class="not">İndirilmeyen sureler internetten çalar. Hepsini Ayarlar'dan indirebilirsin.</span>`
+    :`${sayfaLinkleri(O.m,O.a,O.b).map(x=>`<a class="km-link ana-link" href="${x.u}" target="_blank" rel="noopener">${ikon("dinle")} ${x.ad}</a>`).join("")}<span class="not">Bu ${O.a!=null?"dersin":"sayfanın"} ayetleri Quran.com'da yeni sekmede açılır, orada ayet ayet dinlenir. Uygulamanın içinde dinlemek için GitHub sürümünü kullan.</span>`)}
   ${sec("Diğer",`<div class="sira"><button class="dug" data-tekrarsifir>Sayacı sıfırla</button><button class="dug" data-bzokuma>Benzer ayet ekle</button></div>`)}</div>`}
 function ekranKuran(){
   if(!O){const yl=yeniParcalar(),tl=tekrarSayfalar(),n=S.profile?nextChunks(S,1)[0]:null;
@@ -1482,57 +1536,88 @@ function ekranKuran(){
   else if(O.kip==="tekrar"){
     ust=`<div class="kol" style="gap:6px"><div class="tk-liste">${H.l.map(x=>`<button class="tk ${x.tur} ${x.d!=null?"yapildi":""}" data-tsec="${x.m}" aria-pressed="${x.m===O.tm}"><span class="nk ${x.tur}"></span>${x.d!=null?"✓ ":""}s.${dOf(x.m)}</button>`).join("")}</div><div class="lejant"><span><i class="nk taze"></i>Taze</span><span><i class="nk has"></i>Has</span></div></div>`;
     alt=H.x.d==null?`<div class="kart kol" style="gap:10px"><b>${pageName(m)} sayfasını ezberden nasıl okudun?</b>${PUAN(H.x.k,m)}</div>`:`<div class="tamam sira ara"><span>Bu sayfa işaretlendi</span>${SONUC(H.x.d)}</div>`}
-  else{const ss=surahsOn(m);ust=`<div class="kuran-ust"><label class="alan" for="ksure">Sure<select id="ksure">${SURAH_TR.map((t,i)=>`<option value="${i+1}" ${i+1===(ss[0]||1)?"selected":""}>${i+1}. ${t}</option>`).join("")}</select></label><label class="alan" for="kcuz">Cüz<select id="kcuz">${Array.from({length:30},(x,i)=>`<option value="${i+1}" ${i+1===juzOf(m)?"selected":""}>${i+1}</option>`).join("")}</select></label><label class="alan" for="ksayfa">Sayfa<input type="number" id="ksayfa" min="0" max="604" value="${d}" inputmode="numeric"></label></div>`}
+  else{const ss=surahsOn(m);ust=`<div class="kuran-ust"><label class="alan" for="ksure">Sure<select id="ksure">${SURAH_TR.map((t,i)=>`<option value="${i+1}" ${i+1===(ss[0]||1)?"selected":""}>${i+1}. ${t}</option>`).join("")}</select></label><label class="alan" for="kcuz">Cüz<select id="kcuz">${Array.from({length:30},(x,i)=>`<option value="${i+1}" ${i+1===juzOf(m)?"selected":""}>${i+1}</option>`).join("")}</select></label><label class="alan" for="ksayfa">Sayfa<input type="number" id="ksayfa" min="0" max="${dOf(TOPLAM)}" value="${d}" inputmode="numeric"></label></div>`}
   return`<div class="kol">${kipler}${ust}
-  <div class="sayfa-nav"><button data-sayfa-git="${m+1}" ${m>=604?"disabled":""} aria-label="Sonraki sayfa">‹</button><span>s.${d}${a!=null?" · "+hamSatir({m,a,b}):""}${mod==="gizli"?" · Hafız modu":""}</span><button data-sayfa-git="${m-1}" ${m<=1?"disabled":""} aria-label="Önceki sayfa">›</button></div>
+  <div class="sayfa-nav"><button data-sayfa-git="${m+1}" ${m>=TOPLAM?"disabled":""} aria-label="Sonraki sayfa">‹</button><span>s.${d}${a!=null?" · "+hamSatir({m,a,b}):""}${mod==="gizli"?" · Hafız modu":""}</span><button data-sayfa-git="${m-1}" ${m<=1?"disabled":""} aria-label="Önceki sayfa">›</button></div>
   ${mod!=="oku"?`<p class="not">Ezberden oku, kontrol etmek için ayete dokun.</p>`:""}
   ${not}${govde}
   <p class="not" style="text-align:center">${n}/15 · ${asama(n)}</p>
   ${alt}
   <p class="not">${HAT==="d"?`Arapça metin: Diyanet İşleri Başkanlığı mushafı (<a href="https://github.com/alperenugus/Kuran" target="_blank" rel="noopener">alperenugus/Kuran</a>, CC BY 4.0). Yazı tipi: Diyanet Shaikh Hamdullah Mushaf.`:HAT==="b"?`Arapça metin: <a href="https://tanzil.net" target="_blank" rel="noopener">Tanzil Projesi</a>, sade yazım; Diyanet metninden bazı işaretlerde farklı olabilir.`:`Medine hattı.`}${KG!=="a"?` Meal: Diyanet İşleri Başkanlığı meali (Tanzil.net üzerinden, ticari olmayan kullanım).`:""}</p></div>`}
 /* ---------- Uygulama içinde dinleme ----------
-   Fatih Çollak'ın sure kayıtları archive.org'dan akış olarak çalınır (kayıtlar indirilip dağıtılmaz).
-   Ayet başlangıç ve bitişleri kayıtlardaki duraklamalardan ölçüldü (veri-ses); sayfa ya da ders aralığı tam bu ayetlerle çalınır.
-   Claude yayın ortamı dış sesi engellediği için yalnızca GitHub sürümünde (PWA) çalışır; orada link olarak kalır. */
+   Varsayılan: ayet ayet kayıtlı hafızlar (everyayah.com). Her ayet ayrı dosya olduğu için sayfa ya da ders tam o ayetlerle,
+   doğru sırayla çalınır. Surenin başında (Fâtiha ve Tevbe dışında) önce Besmele okunur.
+   Fatih Çollak: archive.org'daki sure kayıtları; ayet sınırları kayıttaki duraklamalardan tahmin edildi (veri-ses), yaklaşıktır.
+   Kayıtlar dağıtılmaz: akış olarak çalınır, kullanıcı isterse yalnızca kendi cihazına indirilir.
+   Claude yayın ortamı dış sesi engellediği için oynatıcı yalnızca GitHub sürümünde (PWA) çalışır; orada Quran.com linki verilir. */
 const SES_OK=PWA||/[?&]ses=1/.test(location.search);
+const AYET_SES="https://everyayah.com/data/";
+const KARILER=[
+  {k:"husari-m",ad:"Husarî (muallim)",tam:"Mahmûd Halîl el-Husarî",alt:"Yavaş, öğretici okuyuş; ezber için",yol:"Husary_Muallim_128kbps"},
+  {k:"husari",ad:"Husarî",tam:"Mahmûd Halîl el-Husarî",alt:"Murattal",yol:"Husary_128kbps"},
+  {k:"minsavi",ad:"Minşâvî",tam:"Muhammed Sıddîk el-Minşâvî",alt:"Murattal",yol:"Minshawy_Murattal_128kbps"},
+  {k:"abdulbasit",ad:"Abdulbâsıt",tam:"Abdulbâsıt Abdussamed",alt:"Murattal",yol:"Abdul_Basit_Murattal_192kbps"},
+  {k:"afasi",ad:"Afâsî",tam:"Mişârî Râşid el-Afâsî",alt:"Murattal",yol:"Alafasy_128kbps"},
+  {k:"collak",ad:"Fatih Çollak",tam:"Fatih Çollak",alt:"Sure kaydı; ayet sınırları tahminidir, kayabilir",collak:true}];
+let KARI=KARILER[0];
+function kariSec(k){KARI=KARILER.find(x=>x.k===k)||KARILER[0]}
+const ayetUrl=(s,v,K)=>AYET_SES+(K||KARI).yol+"/"+String(s).padStart(3,"0")+String(v).padStart(3,"0")+".mp3";
+const kariOnEk=K=>AYET_SES+K.yol+"/";
+function kariDegis(k){const caliyordu=!!(CAL&&CAL.caliyor);if(CAL)calDur();kariSec(k);Depo.tercih.yaz("kari",KARI.k);
+  if(caliyordu)calBasla();render();tost("Hafız: "+KARI.tam)}
 let ZAMAN=null,CAL=null;const DINLE={hiz:1,tekrar:1,ayet:1};
 const zamanVeri=()=>ZAMAN||(ZAMAN=gomulu("ses"));
 function ayetZaman(s,v){const Z=zamanVeri();if(!Z||!Z.a[s-1])return null;const a=Z.a[s-1],e=Z.e[s-1];
   return{bas:v===1?0:Math.max(0,a[v-1]-.3),son:Math.min(Z.d[s-1],e[v-1]+.2)}}
-/* Sayfaya özel dinleme linki: sure kaydını #t=başlangıç,bitiş ile açar; tarayıcı sayfanın ilk ayetinden başlar, son ayetinde durur.
-   Sayfada birden çok sure varsa her sure için ayrı link verilir. */
-function sayfaSesleri(m,a,b){if(!metin()||!zamanVeri())return[];const g=[];
+/* Claude sürümü için: sayfanın ya da dersin ayetleri, sure sure Quran.com linki (orada ayet ayet sesli okunur) */
+function sayfaLinkleri(m,a,b){if(!metin())return[];const g=[];
   satirAyetleri(m,a,b).list.forEach(x=>{const son=g[g.length-1];if(son&&son.s===x[0])son.v2=x[1];else g.push({s:x[0],v1:x[1],v2:x[1]})});
-  const Z=zamanVeri();
-  return g.filter(x=>!(x.v1===1&&x.v2===Z.a[x.s-1].length)).map(x=>{const z1=ayetZaman(x.s,x.v1),z2=ayetZaman(x.s,x.v2);if(!z1||!z2)return null;   // kısa sure sayfaya tam sığıyorsa sure linki yeter
-    return Object.assign(x,{u:collakUrl(x.s)+"#t="+z1.bas.toFixed(1)+","+z2.son.toFixed(1),ad:SURAH_TR[x.s-1]+" "+(x.v1===x.v2?x.v1:x.v1+"–"+x.v2)})}).filter(Boolean)}
-function calListesi(){if(!metin()||!O)return[];return satirAyetleri(O.m,O.a,O.b).list.map(x=>[x[0],x[1]])}
-function calAnahtar(){return O?O.m+":"+O.a+":"+O.b:""}
+  return g.map(x=>Object.assign(x,{u:`https://quran.com/${x.s}/${x.v1===x.v2?x.v1:x.v1+"-"+x.v2}`,ad:SURAH_TR[x.s-1]+" "+(x.v1===x.v2?x.v1:x.v1+"–"+x.v2)}))}
+/* Çalma listesi: [sure, ayet]; ayet 0 = surenin başındaki Besmele (ayet ayet kayıtlı hafızlarda ayrı dosya: 001001) */
+function calListesi(){if(!metin()||!O)return[];const l=[];
+  satirAyetleri(O.m,O.a,O.b).list.forEach(x=>{if(!KARI.collak&&x[1]===1&&x[0]!==1&&x[0]!==9)l.push([x[0],0]);l.push([x[0],x[1]])});return l}
+function calAnahtar(){return O?O.m+":"+O.a+":"+O.b+":"+KARI.k:""}
 function calBasla(){
   const l=calListesi();if(!l.length){tost("Metin yükleniyor, birazdan tekrar dene");return}
-  if(!zamanVeri()){tost("Dinleme verisi bulunamadı");return}
+  if(KARI.collak&&!zamanVeri()){tost("Dinleme verisi bulunamadı");return}
   if(!CAL){const el=new Audio();el.preload="auto";CAL={el};
-    el.addEventListener("error",()=>{if(!CAL.caliyor)return;
-      if(sesSunucu<SES_SUNUCU.length-1){sesSunucu++;CAL.s=null;calAyet();return}   // öbür sunucuyu dene
-      sesSunucu=0;tost("Ses açılamadı. İnternet bağlantını kontrol et.");calDur()});
-    el.addEventListener("waiting",()=>calYaz());el.addEventListener("playing",()=>calYaz())}
-  Object.assign(CAL,{liste:l,i:0,ayetKalan:DINLE.ayet,turKalan:DINLE.tekrar,tur:1,acik:true,caliyor:true,anahtar:calAnahtar()});
-  calAyet(true);render()}
+    el.addEventListener("error",calHata);el.addEventListener("ended",calBitti);
+    el.addEventListener("waiting",()=>calYaz());el.addEventListener("playing",()=>{if(CAL)CAL.hata=0;calYaz()})}
+  Object.assign(CAL,{liste:l,i:0,ayetKalan:DINLE.ayet,tur:1,acik:true,caliyor:true,anahtar:calAnahtar(),s:null,hata:0});
+  calAyet();render()}
+function calHata(){if(!CAL||!CAL.caliyor)return;
+  if(KARI.collak&&sesSunucu<SES_SUNUCU.length-1){sesSunucu++;CAL.s=null;calAyet();return}   // öbür sunucuyu dene
+  if(KARI.collak)sesSunucu=0;
+  else if(CAL.hata<2){CAL.hata++;setTimeout(()=>{if(CAL&&CAL.caliyor)calAyet()},800);return}   // kısa bir kesinti olabilir: aynı ayeti yeniden dene
+  tost(navigator.onLine?"Ses açılamadı, biraz sonra yeniden dene.":"İnternet yok. Sureyi önceden cihaza indirirsen internetsiz de çalar.");calDur()}
 function calAyet(){
-  const[s,v]=CAL.liste[CAL.i],z=ayetZaman(s,v),el=CAL.el;if(!z){calSonraki();return}
-  if(CAL.s!==s){CAL.s=s;el.src=collakUrl(s)+"#t="+z.bas.toFixed(2)}else el.currentTime=z.bas;
-  el.playbackRate=DINLE.hiz;el.play().catch(()=>{});
-  CAL.son=z.son;CAL.caliyor=true;clearInterval(CAL.t);CAL.t=setInterval(calKontrol,50);calIsaretle();calYaz();medyaOturum()}
+  const[s,v]=CAL.liste[CAL.i],el=CAL.el;clearInterval(CAL.t);
+  if(KARI.collak){const z=ayetZaman(s,v);if(!z){calSonraki();return}
+    if(CAL.s!==s){CAL.s=s;el.src=collakUrl(s)+"#t="+z.bas.toFixed(2)}else el.currentTime=z.bas;
+    CAL.son=z.son;CAL.t=setInterval(calKontrol,50)}
+  else{el.src=v===0?ayetUrl(1,1):ayetUrl(s,v);CAL.son=null;calOnYukle()}
+  el.defaultPlaybackRate=el.playbackRate=DINLE.hiz;el.play().catch(()=>{});
+  CAL.caliyor=true;calIsaretle();calYaz();medyaOturum()}
+/* Sıradaki iki ayeti önceden indirir; ayet geçişlerinde bekleme olmaz */
+const onYuklenen=new Set();
+function calOnYukle(){for(let j=1;j<=2;j++){const x=CAL.liste[CAL.i+j];if(!x)break;const u=x[1]===0?ayetUrl(1,1):ayetUrl(x[0],x[1]);
+  if(onYuklenen.has(u))continue;onYuklenen.add(u);fetch(u).then(r=>r.blob()).catch(()=>onYuklenen.delete(u))}}
+function calBitti(){if(!CAL||!CAL.caliyor)return;
+  if(KARI.collak){calKontrolBitis();return}
+  const v=CAL.liste[CAL.i][1];
+  if(v!==0&&CAL.ayetKalan>1){CAL.ayetKalan--;CAL.el.currentTime=0;CAL.el.play().catch(()=>{});calYaz();return}
+  calSonraki()}
 function calSonraki(){
   if(CAL.i<CAL.liste.length-1){const c=CAL.liste[CAL.i],n=CAL.liste[CAL.i+1];CAL.i++;CAL.ayetKalan=DINLE.ayet;
-    if(n[0]===c[0]&&n[1]===c[1]+1&&DINLE.ayet===1&&!CAL.el.paused){CAL.son=ayetZaman(...n).son;calIsaretle();calYaz();medyaOturum();return}
+    if(KARI.collak&&n[0]===c[0]&&n[1]===c[1]+1&&DINLE.ayet===1&&!CAL.el.paused){CAL.son=ayetZaman(...n).son;calIsaretle();calYaz();medyaOturum();return}
     calAyet();return}
   if(DINLE.tekrar===0||CAL.tur<DINLE.tekrar){CAL.tur++;CAL.i=0;CAL.ayetKalan=DINLE.ayet;calAyet();return}
   calDur(true)}
-function calKontrol(){const el=CAL.el;if(el.paused||el.seeking||el.readyState<2)return;
-  if(el.currentTime>=CAL.son||el.ended){
-    if(CAL.ayetKalan>1){CAL.ayetKalan--;el.currentTime=ayetZaman(...CAL.liste[CAL.i]).bas;return}
-    calSonraki()}}
+function calKontrol(){const el=CAL.el;if(!KARI.collak||el.paused||el.seeking||el.readyState<2)return;
+  if(el.currentTime>=CAL.son)calKontrolBitis()}
+function calKontrolBitis(){
+  if(CAL.ayetKalan>1){CAL.ayetKalan--;CAL.el.currentTime=ayetZaman(...CAL.liste[CAL.i]).bas;if(CAL.el.paused)CAL.el.play().catch(()=>{});return}
+  calSonraki()}
 function calDur(bitti){if(!CAL)return;CAL.el.pause();clearInterval(CAL.t);CAL.caliyor=false;
   document.querySelectorAll(".ayet.caliyor").forEach(e=>e.classList.remove("caliyor"));
   if(bitti){CAL.i=0;tost("Dinleme bitti")}calYaz()}
@@ -1540,35 +1625,41 @@ function calKapat(){calDur();if(CAL)CAL.acik=false;render()}
 function calDurdurDevam(){if(!CAL||!CAL.acik){calBasla();return}
   if(CAL.caliyor){CAL.el.pause();CAL.caliyor=false;clearInterval(CAL.t)}
   else if(CAL.anahtar!==calAnahtar()){calBasla();return}
-  else{CAL.caliyor=true;CAL.el.play().catch(()=>{});clearInterval(CAL.t);CAL.t=setInterval(calKontrol,50);calIsaretle()}
+  else{CAL.caliyor=true;CAL.el.play().catch(()=>{});clearInterval(CAL.t);if(KARI.collak)CAL.t=setInterval(calKontrol,50);calIsaretle()}
   calYaz()}
-function calAtla(d){if(!CAL||!CAL.liste)return;CAL.i=Math.max(0,Math.min(CAL.liste.length-1,CAL.i+d));CAL.ayetKalan=DINLE.ayet;CAL.s=CAL.s;calAyet()}
+function calAtla(d){if(!CAL||!CAL.liste)return;let i=CAL.i+d;
+  if(CAL.liste[i]&&CAL.liste[i][1]===0&&d<0)i--;          // geri giderken Besmele atlanır
+  CAL.i=Math.max(0,Math.min(CAL.liste.length-1,i));CAL.ayetKalan=DINLE.ayet;calAyet()}
 function calIsaretle(){document.querySelectorAll(".ayet.caliyor").forEach(e=>e.classList.remove("caliyor"));
-  if(!CAL||!CAL.caliyor)return;const[s,v]=CAL.liste[CAL.i],e=document.querySelector(`.ayet[data-ayet="${s}:${v}"]`);
+  if(!CAL||!CAL.caliyor)return;const[s,v]=CAL.liste[CAL.i];if(!v)return;const e=document.querySelector(`.ayet[data-ayet="${s}:${v}"]`);
   if(e){e.classList.add("caliyor");const r=e.getBoundingClientRect();if(r.top<80||r.bottom>innerHeight-170)e.scrollIntoView({block:"center",behavior:"smooth"})}}
 function calOrta(){if(!CAL||!CAL.liste)return"";const[s,v]=CAL.liste[CAL.i];
-  return`<b>${SURAH_TR[s-1]} ${v}. ayet</b><span>${CAL.i+1} / ${CAL.liste.length} ayet${DINLE.tekrar!==1?` · ${DINLE.tekrar?CAL.tur+". tur":"sürekli"}`:""}${CAL.el&&CAL.caliyor&&CAL.el.readyState<3?" · yükleniyor…":""}</span>`}
+  const top=CAL.liste.filter(x=>x[1]).length,sira=CAL.liste.slice(0,CAL.i+1).filter(x=>x[1]).length;
+  return`<b>${v?SURAH_TR[s-1]+" "+v+". ayet":"Besmele · "+SURAH_TR[s-1]}</b><span>${KARI.ad} · ${Math.max(1,sira)} / ${top} ayet${DINLE.tekrar!==1?` · ${DINLE.tekrar?CAL.tur+". tur":"sürekli"}`:""}${CAL.el&&CAL.caliyor&&CAL.el.readyState<3?" · yükleniyor…":""}</span>`}
 function calYaz(){const o=$(".calar-orta");if(o)o.innerHTML=calOrta();const p=$("[data-calp]");if(p){p.innerHTML=ikon(CAL&&CAL.caliyor?"duraklat":"cal");p.setAttribute("aria-label",CAL&&CAL.caliyor?"Duraklat":"Çal")}
   const d=$("[data-dinle]");if(d)d.setAttribute("aria-pressed",!!(CAL&&CAL.caliyor))}
 function medyaOturum(){if(!("mediaSession" in navigator)||!CAL)return;const[s,v]=CAL.liste[CAL.i];
-  try{navigator.mediaSession.metadata=new MediaMetadata({title:`${SURAH_TR[s-1]} ${v}. ayet`,artist:"Fatih Çollak",album:"Hıfz Defteri · s."+dOf(O.m)});
+  try{navigator.mediaSession.metadata=new MediaMetadata({title:v?`${SURAH_TR[s-1]} ${v}. ayet`:`Besmele · ${SURAH_TR[s-1]}`,artist:KARI.tam,album:"Hıfz Defteri · s."+dOf(O.m)});
     navigator.mediaSession.setActionHandler("play",()=>calDurdurDevam());navigator.mediaSession.setActionHandler("pause",()=>calDurdurDevam());
     navigator.mediaSession.setActionHandler("nexttrack",()=>calAtla(1));navigator.mediaSession.setActionHandler("previoustrack",()=>calAtla(-1))}catch(e){}}
-/* Oynatıcı: alttaki araç çubuğuyla aynı alt bölümde, yuvarlak köşeli kart. Hız ve tekrar alttan açılan pencerelerde. */
+/* Oynatıcı: alttaki araç çubuğuyla aynı alt bölümde, yuvarlak köşeli kart. Hız, tekrar ve hafız alttan açılan pencerelerde. */
 let SHEET=null;
 const HIZLAR=[.5,.75,1,1.25,1.5,1.75,2,2.5,3];
 const hizYaz=h=>String(+(+h).toFixed(2)).replace(".",",");
 const hizAd=h=>h<.9?"Yavaş":h<1.1?"Normal":h<1.6?"Hızlı":"Çok hızlı";
 function dinleKaydet(){Depo.tercih.yaz("dinle",{hiz:DINLE.hiz,tekrar:DINLE.tekrar,ayet:DINLE.ayet})}
-function hizAyarla(h){DINLE.hiz=Math.round(Math.max(.5,Math.min(3,h))*100)/100;if(CAL&&CAL.el)CAL.el.playbackRate=DINLE.hiz;dinleKaydet()}
+function hizAyarla(h){DINLE.hiz=Math.round(Math.max(.5,Math.min(3,h))*100)/100;if(CAL&&CAL.el){CAL.el.defaultPlaybackRate=CAL.el.playbackRate=DINLE.hiz}dinleKaydet()}
 function gosterge(h){
   const cx=100,cy=100,r=76,f=(h-.5)/2.5,a=Math.PI*(1-f),nok=(t,rr)=>[cx+rr*Math.cos(Math.PI*(1-t)),cy-rr*Math.sin(Math.PI*(1-t))];
   const[x,y]=nok(f,r),[nx,ny]=nok(f,50);
   const tik=[0,.2,.4,.6,.8,1].map(t=>{const[a1,b1]=nok(t,90),[a2,b2]=nok(t,98);return`<line class="g-tik" x1="${a1.toFixed(1)}" y1="${b1.toFixed(1)}" x2="${a2.toFixed(1)}" y2="${b2.toFixed(1)}"/>`}).join("");
   return`<svg viewBox="0 0 200 112" aria-hidden="true"><path class="g-iz" d="M24 100 A76 76 0 0 1 176 100"/>${f>.005?`<path class="g-dolu" d="M24 100 A76 76 0 0 1 ${x.toFixed(1)} ${y.toFixed(1)}"/>`:""}${tik}<line class="g-igne" x1="${cx}" y1="${cy}" x2="${nx.toFixed(1)}" y2="${ny.toFixed(1)}"/><circle class="g-merkez" cx="${cx}" cy="${cy}" r="7"/></svg><b class="g-deger">${hizYaz(h)}×</b>`}
+/* Hafız seçimi: okuma çekmecesinde, oynatıcıda ve Ayarlar'da aynı liste */
+const kariListe=()=>KARILER.map(K=>`<button class="km-sec" data-kari="${K.k}" aria-pressed="${KARI.k===K.k}"><span class="km-r" aria-hidden="true"></span><span class="cek-ad"><b>${K.ad}</b><span class="not">${K.alt}</span></span></button>`).join("");
 function sheetHtml(){if(!SHEET)return"";
   const bas=(ik,b,a)=>`<div class="sh-bas"><span class="sh-ik">${ikon(ik)}</span><div><b>${b}</b><span class="soluk" id="shalt">${a}</span></div><button class="sh-kapat" data-sheetkapat aria-label="Kapat">${ikon("kapat")}</button></div>`;
   const arka=`<button class="sheet-arka" data-sheetkapat aria-label="Kapat"></button>`;
+  if(SHEET==="kari")return arka+`<div class="sheet" role="dialog" aria-label="Hafız">${bas("dinle","Hafız",KARI.tam)}<div class="kol" style="gap:6px">${kariListe()}</div></div>`;
   if(SHEET==="hiz")return arka+`<div class="sheet" role="dialog" aria-label="Oynatma hızı">${bas("hiz","Oynatma hızı",hizAd(DINLE.hiz))}
     <div class="gosterge" id="gosterge">${gosterge(DINLE.hiz)}</div>
     <div class="kol" style="gap:4px"><div class="sira ara soluk kucuk"><span>${ikon("cal").replace("<svg",'<svg width="14" height="14"')} 0,5×</span><span>3×</span></div>
@@ -1581,37 +1672,54 @@ function sheetHtml(){if(!SHEET)return"";
     <span class="not">Örneğin 3× seçersen her ayet üç kez okunur, sonra sıradaki ayete geçilir.</span></div></div>`}
 function calarHtml(){if(!SES_OK||!CAL||!CAL.acik)return"";
   return`<div class="calar" role="region" aria-label="Dinleme"><div class="calar-ust"><button class="calar-b" data-calatla="-1" aria-label="Önceki ayet">${ikon("onceki")}</button><button class="calar-b ana" data-calp aria-label="${CAL.caliyor?"Duraklat":"Çal"}">${ikon(CAL.caliyor?"duraklat":"cal")}</button><button class="calar-b" data-calatla="1" aria-label="Sonraki ayet">${ikon("sonraki")}</button><div class="calar-orta">${calOrta()}</div><button class="calar-b kck" data-calkapat aria-label="Dinlemeyi kapat">${ikon("kapat")}</button></div>
-  <div class="calar-alt"><button class="calar-cip" data-sheet="hiz">${ikon("hiz")}<span>${DINLE.hiz===1?"Normal hız":hizYaz(DINLE.hiz)+"×"}</span></button><button class="calar-cip" data-sheet="tekrar">${ikon("hafiz")}<span>Sayfa ${DINLE.tekrar?DINLE.tekrar+" kez":"sürekli"} · ayet ${DINLE.ayet}×</span></button></div></div>`}
-/* Sesleri cihaza indirme: kayıtlar archive.org'dan bu cihazın önbelleğine (ses-collak) iner, yalnızca burada durur.
+  <div class="calar-alt"><button class="calar-cip" data-sheet="kari">${ikon("dinle")}<span>${KARI.ad}</span></button><button class="calar-cip" data-sheet="hiz">${ikon("hiz")}<span>${DINLE.hiz===1?"Normal hız":hizYaz(DINLE.hiz)+"×"}</span></button><button class="calar-cip" data-sheet="tekrar">${ikon("hafiz")}<span>Sayfa ${DINLE.tekrar?DINLE.tekrar+" kez":"sürekli"} · ayet ${DINLE.ayet}×</span></button></div></div>`}
+/* Sesleri cihaza indirme: dosyalar bu cihazın önbelleğine iner, yalnızca burada durur.
+   Fatih Çollak sure kayıtları "ses-collak", ayet ayet kayıtlar adresleriyle "ses-ayet" önbelleğinde.
    Servis çalışanı aynı adrese gelen istekleri önbellekten, ileri sarmayı destekleyerek karşılar; böylece dinleme internetsiz çalışır. */
 const SES_CACHE="ses-collak",sesAnahtar=s=>"ses/"+String(s).padStart(3,"0")+".mp3";
 let INDIR=null,sesSilOnay=false;
-const sesBoyut=()=>Depo.ses.boyutlar(),sesVar=s=>Depo.ses.var(s);
+const sesBoyut=K=>Depo.ses.boyutlar((K||KARI).k),sesVar=(s,K)=>Depo.ses.var(s,(K||KARI).k);
+async function getir(urller){                     // sırayla değil, aynı anda en çok 6 dosya; her biri 3 kez denenir
+  const out=new Array(urller.length);let i=0;
+  async function isci(){while(i<urller.length&&!INDIR.iptal){const j=i++;let son;
+    for(let deneme=0;deneme<3&&!INDIR.iptal;deneme++){try{const r=await fetch(urller[j],{mode:"cors",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);out[j]={url:urller[j],blob:await r.blob()};son=null;break}
+      catch(e){son=e;await new Promise(r=>setTimeout(r,1200*(deneme+1)))}}
+    if(son)throw son}}
+  await Promise.all(Array.from({length:6},isci));return out}
 async function sesIndir(liste){
   if(!Depo.ses.destek()){tost("Bu tarayıcı indirmeyi desteklemiyor");return}
-  const yeni=liste.filter(s=>!sesVar(s));if(!yeni.length){tost("Zaten cihazda");return}
-  if(INDIR&&INDIR.aktif){yeni.forEach(s=>{if(!INDIR.kuyruk.includes(s)&&INDIR.su!==s){INDIR.kuyruk.push(s);INDIR.toplam++}});indirYaz();return}
-  INDIR={kuyruk:yeni,aktif:true,bitti:0,hata:0,iptal:false,toplam:yeni.length,su:null};indirYaz();
+  const K=KARI,yeni=liste.filter(s=>!sesVar(s,K));if(!yeni.length){tost("Zaten cihazda");return}
+  if(INDIR&&INDIR.aktif){if(INDIR.K!==K){tost(INDIR.K.ad+" indirmesi sürüyor, bitince tekrar dene");return}
+    yeni.forEach(s=>{if(!INDIR.kuyruk.includes(s)&&INDIR.su!==s){INDIR.kuyruk.push(s);INDIR.toplam++}});indirYaz();return}
+  INDIR={K,kuyruk:yeni,aktif:true,bitti:0,hata:0,iptal:false,toplam:yeni.length,su:null};indirYaz();
   await Depo.kaliciIste();
   while(INDIR.kuyruk.length&&!INDIR.iptal){const s=INDIR.kuyruk.shift();INDIR.su=s;indirYaz();
     let tamam=false;
-    for(let deneme=0;deneme<3&&!tamam&&!INDIR.iptal;deneme++){
-      try{const r=await fetch(collakUrl(s,deneme%SES_SUNUCU.length),{mode:"cors",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);const b=await r.blob();
-        await Depo.ses.kaydet(s,sesAnahtar(s),b);INDIR.bitti++;tamam=true}
-      catch(e){INDIR.sonHata=String(e);await new Promise(r=>setTimeout(r,1500*(deneme+1)))}}
+    try{
+      if(K.collak){let son;
+        for(let deneme=0;deneme<3&&!tamam&&!INDIR.iptal;deneme++){
+          try{const r=await fetch(collakUrl(s,deneme%SES_SUNUCU.length),{mode:"cors",cache:"no-store"});if(!r.ok)throw new Error("HTTP "+r.status);
+            await Depo.ses.kaydet(s,sesAnahtar(s),await r.blob());tamam=true}
+          catch(e){son=e;await new Promise(r=>setTimeout(r,1500*(deneme+1)))}}}
+      else{const u=[...(s!==1&&s!==9?[ayetUrl(1,1,K)]:[]),...Array.from({length:AYET_SAYI[s-1]},(_,i)=>ayetUrl(s,i+1,K))];
+        const d=await getir(u);if(!INDIR.iptal){await Depo.ses.ayetKaydet(K.k,s,d);tamam=true}}
+      if(tamam)INDIR.bitti++}
+    catch(e){INDIR.sonHata=String(e)}
     if(!tamam&&!INDIR.iptal){INDIR.hata++;if(!navigator.onLine){tost("İnternet yok, indirme durdu");break}}
     indirYaz()}
   INDIR.aktif=false;INDIR.su=null;tost(INDIR.iptal?"İndirme durduruldu":`İndirme bitti${INDIR.hata?`, ${INDIR.hata} sure indirilemedi`:""}`);render()}
-async function sesSil(){await Depo.ses.temizle();sesSilOnay=false;render();tost("İndirilen sesler silindi")}
+async function sesSil(){await Depo.ses.temizle(KARI.k,kariOnEk(KARI));sesSilOnay=false;render();tost(KARI.ad+" sesleri silindi")}
 function indirMetin(){const o=sesBoyut(),n=Object.keys(o).length,mb=Math.round(Object.values(o).reduce((a,b)=>a+b,0)/1048576);
-  return`<b>${n} / 114 sure cihazda</b> (${mb} MB)${INDIR&&INDIR.aktif?`<br>İndiriliyor: ${INDIR.su?SURAH_TR[INDIR.su-1]:""} · ${INDIR.bitti} / ${INDIR.toplam}`:""}`}
+  return`<b>${KARI.ad}: ${n} / 114 sure cihazda</b> (${mb} MB)${INDIR&&INDIR.aktif?`<br>İndiriliyor (${INDIR.K.ad}): ${INDIR.su?SURAH_TR[INDIR.su-1]:""} · ${INDIR.bitti} / ${INDIR.toplam}`:""}`}
 function indirYaz(){document.querySelectorAll(".indirdurum").forEach(e=>e.innerHTML=indirMetin())}
 function sesKart(){if(!SES_OK)return"";const aktif=INDIR&&INDIR.aktif,n=Object.keys(sesBoyut()).length;
-  return`<div class="kart kol"><h3>Fatih Çollak sesleri</h3><p class="soluk kucuk">Sesleri bu cihaza indirirsen dinleme internetsiz de çalışır. Dosyalar yalnızca bu cihazda durur. 114 surenin tamamı yaklaşık 880 MB, Wi-Fi'de indirmeni öneririm.</p>
+  return`<div class="kart kol"><h3>Dinleme</h3><p class="soluk kucuk">Okuma ekranındaki “Dinle” bu hafızı çalar. Ayet ayet kayıtlı hafızlarda her ayet ayrı dosyadır, sayfa tam doğru ayetlerle çalınır.</p>
+  <div class="kol" style="gap:6px">${kariListe()}</div>
+  <p class="soluk kucuk">Seçili hafızın seslerini bu cihaza indirirsen dinleme internetsiz de çalışır. Dosyalar yalnızca bu cihazda durur. Kuran'ın tamamı hafıza göre 1 GB'a yakın ya da daha fazla tutar, Wi-Fi'de indirmeni öneririm.</p>
   <p class="indirdurum">${indirMetin()}</p><div class="sira">${aktif?`<button class="dug" data-sesdur>İndirmeyi durdur</button>`:`<button class="dug ana" data-sesindir="hepsi">${n?"Kalanları indir":"Hepsini indir"}</button><button class="dug" data-sesindir="kuz">Son cüz (30. cüz)</button>`}
   ${n&&!aktif?(sesSilOnay?`<button class="dug mercan" data-sessil="evet">Evet, sil</button><button class="dug" data-sessil="hayir">Vazgeç</button>`:`<button class="dug" data-sessil="sor">İndirilenleri sil</button>`):""}</div></div>`}
 function cizOrtu(){render();scrollTo(0,0)}
-function sayfayaGit(m){O.m=Math.max(1,Math.min(604,m));O.kip="serbest";O.acik={};S.sonOku=O.m;render()}
+function sayfayaGit(m){O.m=Math.max(1,Math.min(TOPLAM,m));O.kip="serbest";O.acik={};S.sonOku=O.m;render()}
 
 /* ---------- Benzer ayetler defteri ---------- */
 const BZ_ARA=[1,3,7,14,30,60];                 // doğru bilindikçe uzayan tekrar aralığı, gün
@@ -1784,6 +1892,9 @@ document.addEventListener("click",e=>{
   const t=e.target.closest("button,.ayet");if(!t)return;const d=t.dataset;
   if(d.dinle!=null){MENU=KMENU=false;if(CAL&&CAL.acik&&CAL.anahtar===calAnahtar())calDurdurDevam();else calBasla();return}
   if(d.calp!=null){calDurdurDevam();return}
+  if(d.kari){kariDegis(d.kari);return}
+  if(d.okudinle){const m=+d.okudinle;oku(m);O.m=m;O.a=O.b=null;if(metin())calBasla();else loadQuran().then(()=>{render();calBasla()}).catch(()=>{});return}   // sayfa açılır ve hemen çalmaya başlar
+  if(d.okumeal){kgSec("am");oku(+d.okumeal);return}
   if(d.buyut!=null){buyutDegis(!BUYUK);return}
 
   if(d.sesindir){const l=d.sesindir==="hepsi"?Array.from({length:114},(_,i)=>i+1):d.sesindir==="kuz"?Array.from({length:37},(_,i)=>78+i):[+d.sesindir];sesIndir(l);render();return}
@@ -1863,7 +1974,7 @@ document.addEventListener("click",e=>{
   if(d.icemetin!=null){iceAktarHazirla($("#icemetin").value);return}
   if(d.iceonay!=null){iceAktarOnayla();return}
   if(d.iceiptal!=null){ICE=null;render();tost("İçe aktarma iptal edildi");return}
-  if(d.kur!=null){if(KURULUM){KURULUM.prompt();KURULUM.userChoice.finally(()=>{KURULUM=null;render()})}return}
+  if(d.kur!=null){if(KURULUM){const k=KURULUM;Promise.resolve().then(()=>k.prompt()).then(()=>k.userChoice).then(()=>{KURULUM=null;render()},()=>tost("Tarayıcının menüsünden “Ana ekrana ekle”yi seç"))}return}
   if(d.ozetkopya!=null){metniKopyala(ozetMetin(haftaVeri(HFT)),"#ozetmetin");return}
   if(d.ozetpaylas!=null){navigator.share({title:"Hıfz Defteri haftalık özet",text:ozetMetin(haftaVeri(HFT))}).catch(()=>{});return}
   if(d.yazdir!=null){window.print();return}
@@ -1936,16 +2047,19 @@ function tercihleriUygula(){
   const g=Depo.tercih.oku("gorunum");KG=KG_AD[g]?g:"a";
   const z=Depo.tercih.oku("zemin");ZEMIN=z&&ZEMINLER.some(x=>x[0]===z)?z:"oto";
   const o=+Depo.tercih.oku("boyut",1);ORAN=o>=.8&&o<=1.6?o:1;document.documentElement.style.setProperty("--oran",ORAN);
+  kariSec(Depo.tercih.oku("kari"));
   const dn=Depo.tercih.oku("dinle");if(dn&&typeof dn==="object"){if(dn.hiz>=.5&&dn.hiz<=3)DINLE.hiz=dn.hiz;if(dn.tekrar>=0)DINLE.tekrar=dn.tekrar;if(dn.ayet>=1)DINLE.ayet=dn.ayet}}
 (async function(){
   tercihleriUygula();
   $("#app").innerHTML=`<div class="yukleniyor">Defter açılıyor…</div>`;
   let r={veri:null};try{r=await Depo.hazirla()}catch(e){console.warn(e)}
-  const l=migrate(r.veri);if(l&&l.v===5)S=l;
+  const eskiV=r.veri&&r.veri.v;
+  if(eskiV&&eskiV!==DEFTER_V)await Depo.donusumYedegi(JSON.parse(JSON.stringify(r.veri)),eskiV);   // dönüşümden önceki hali cihazda kalsın
+  const l=migrate(r.veri);if(l&&l.v===DEFTER_V){S=l;if(eskiV!==DEFTER_V)save()}
   ACILDI=true;duzenle();render();
   Depo.bilgi().then(b=>{DEPO_BILGI=b;if(route()==="ayar")render()});
   // Eski Claude sürümü defteri hesap veritabanında da tutuyordu: bu cihazda bir kez okunup yerel depoya taşınır
-  Depo.eskiHesaptanTasi(S.profile?S:null).then(u=>{const v=u&&migrate(u);if(v&&v.v===5){S=v;duzenle();save();render();tost("Hesabındaki defter bu cihaza taşındı")}}).catch(()=>{});
+  Depo.eskiHesaptanTasi(S.profile?S:null).then(u=>{const v=u&&migrate(u);if(v&&v.v===DEFTER_V){S=v;duzenle();save();render();tost("Hesabındaki defter bu cihaza taşındı")}}).catch(()=>{});
   if(PWA){
     Depo.kaliciIste().then(()=>Depo.bilgi()).then(b=>{DEPO_BILGI=b});
     if("serviceWorker" in navigator){const vardi=!!navigator.serviceWorker.controller;
